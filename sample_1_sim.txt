@@ -1,0 +1,50 @@
+#CNES - STELA VERSION: 2.5.1
+#LEO Simulation Report 
+[ General ]
+ Model : GTO
+ Author : Default Author Name
+ Comment : This is a default comment.
+ Simulation duration : 25.0 years
+ Ephemeris step : 86400.0 s
+ Difference between terrestrial and universal time : 67.184 s
+ Integration Step : 86400.0 s
+ Atmospheric drag switch : true
+ Drag quadrature Points : 33
+ Atmospheric Drag Recompute step : 1 steps
+ Solar radiation pressure switch : true
+ Solar radiation pressure quadrature Points : 11
+ Sun switch : true
+ Moon switch : true
+ Zonal order : 7
+ Earth Tesseral switch : false
+ Reentry Altitude : 120.0 km
+ 
+[ Space Object ]
+ Mass : 0.0 kg
+ Drag Area : 0.0 m^2
+ Reflecting Area : 0.0 m^2
+ Reflectivity Coefficient : 1.5
+ Orbit Type : LEO
+ Drag Coefficent Type : VARIABLE
+ Name : Default Object Name
+ 
+[ Atmospheric Model ]
+ Atmospheric model : NRLMSISE-00
+
+[ Solar Activity ]
+ Solar Activity Type : MEAN_CONSTANT
+ AP Constant Equivalent Solar Activity : 15
+ F10.7 Constant Equivalent Solar Activity : 140
+ 
+[ Initial Bulletin ]
+ Date : 2014-05-11T11:32:10.692
+ Type : Perigee/Apogee
+ Frame : CELESTIAL_MEAN_OF_DATE
+ Nature : MEAN
+ Zp (Perigee altitude) : 0.0 km
+ Za (Apogee altitude) : 0.0 km
+ I (Inclination) : 0.0 deg
+ RAAN (Right Ascension of Ascending Node) : 0.0 deg
+ w (Argument of perigee) : 0.0 deg
+ M (Mean anomaly) :  0.0 deg
+ 

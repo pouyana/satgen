@@ -12,6 +12,7 @@ import os.path
 from logger import Logger
 from config_converter import Converter
 
+
 class Config:
     def __init__(self, log_level="ERROR"):
         self.config = ConfigParser.ConfigParser()
@@ -28,15 +29,21 @@ class Config:
         file_container = converter_container.get_file_container(f)
         file_name = file_container["name"]
         try:
-            self.config.read(address)
+            self.config.read(f.name)
             return f.name
         except ConfigParser.ParsingError as e:
             self.log.warning(
                 "The file was not cfg, converted to cfg file")
-            if(
-                file_name+".cfg" in os.listdir(directory)):
-                raw_input("the file allready exists in this directory, give a new name?")
-                    
+            if(file_name+".cfg" in os.listdir(directory)):
+                new_name = raw_input("""
+                    The file allready exists in this directory,
+                    give a new name (don't forget the .cfg)?
+                    """)
+                written_file_name = new_name.strip()
+                converter_container.convert_file(f.name, written_file_name)
+                file_name = written_file_name
+            else:
+                file_name = converter_container.convert_file(f.name)
             return file_name
 
     def read_file(self, address):
@@ -44,7 +51,8 @@ class Config:
         Reads the config file contents and
         generate a configuration dict
         """
-        self.check_file(address)
+        file_name = self.check_file(address)
+        self.config.read(file_name)
         print self.config.get("Space Object", "Mass")
 
 config = Config()

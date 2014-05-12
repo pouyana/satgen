@@ -33,7 +33,7 @@ class Converter:
 
     def get_file_container(self, f):
         """
-        Get the file as a dict of extension and name
+        Get the open file as a dict of extension and name
         """
         file_name = f.name
         name_ext = file_name.split(".")
@@ -68,7 +68,7 @@ class Converter:
             line = line+"\n"
             try:
                 written_file.write(line)
-                self.log.debug(written_file.name+" is written to the desk")
+                self.log.debug(written_file.name+" is written to the disk!")
             except IOError as e:
                 self.log.error(
                     "I/O error({0}): {1}".format(e.errno, e.strerror))

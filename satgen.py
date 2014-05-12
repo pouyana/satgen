@@ -73,7 +73,7 @@ def main():
     verbose = set_verbose_level(args.verbose, args.quiet)
     name = set_name(args.name)
     converter = Converter(log_level=verbose)
-    converter.read_file("aaa")
+    converter.read_file("sample_1_sim.txt")
     print name
 
 if (__name__ == "__main__"):

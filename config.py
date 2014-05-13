@@ -32,7 +32,7 @@ class Config:
         Gives the item value back.
         """
         try:
-            return self.conf[section][item]
+            return self.conf[section][option]
         except KeyError as e:
             self.log.error("Key or value not found please try again ")
             return None
@@ -173,44 +173,59 @@ class Config:
         """
         Retruns the Atmospheric Drag Recompute step
         """
-        return self.get_abstract_item("General", "Atmospheric Drag Recompute step")
+        return self.get_abstract_item(
+            "General",
+            "Atmospheric Drag Recompute step")
 
     def set_atmos_drag_recom_step(self, step=1):
         """
         Sets the Atmospheric Drag Recompute step, default is 1.
         """
-        self.set_atmos_drag_recom_step("General", "Atmospheric Drag Recompute step", step)
+        self.set_atmos_drag_recom_step(
+            "General",
+            "Atmospheric Drag Recompute step",
+            step)
 
     def get_solar_rad_pres_switch(self):
         """
         Returns the Solar radiation pressure switch, Boolean
         """
-        return self.get_abstarct_item("General", "Solar radiation pressure switch")
+        return self.get_abstarct_item(
+            "General",
+            "Solar radiation pressure switch")
 
     def set_solar_rad_pres_switch(self, switch=True):
         """
         Sets the Solar radiation pressure switch, Per default True
         """
-        self.set_abstract_item("General", "Solar radiation pressure switch", switch)
+        self.set_abstract_item(
+            "General",
+            "Solar radiation pressure switch",
+            switch)
 
     def get_solar_rad_pres_quad_points(self):
         """
         Gets the Solar radiation pressure quadrature Points
         """
-        return self.get_abstarct_item("General", "Solar radiation pressure quadrature Points")
+        return self.get_abstarct_item(
+            "General",
+            "Solar radiation pressure quadrature Points")
 
     def set_solar_rad_pres_quad_points(self, points=11):
         """
         Sets Solar radiation pressure quadrature Points, per default 11
         """
-        self.set_abstract_item("General", "Solar radiation pressure quadrature Points", points)
+        self.set_abstract_item(
+            "General",
+            "Solar radiation pressure quadrature Points",
+            points)
 
     def get_sun_switch(self):
         """
         Gets the Sun switch, Boolean.
         """
         return self.get_abstarct_item("General", "Sun switch")
-    
+
     def set_sun_switch(self, switch=True):
         """
         Sets the Sun switch value, per default True.
@@ -263,13 +278,13 @@ class Config:
         """
         Sets the Reentry Altitude, default 120Km, can't be less than 80.
         """
-        while( alt < 80):
+        while(alt < 80):
             alt = raw_input("The Altitude must be between 140 - 80 KM")
         self.set_abstract_item("General", "Reentry Altitude", alt)
 
     def set_mass(self, mass):
         """
-        Set the mass of the space object
+        Set the mass of the space object in kilo grams
         """
         self.set_abstract_item("Space Object", "Mass", mass)
 
@@ -279,8 +294,54 @@ class Config:
         """
         return self.get_abstarct_item("Space Object", "Mass")
 
+    def get_edge_length(self):
+        """
+        Gets the length of a Cube edge, in m
+        """
+        return self.get_abstarct_item("Space Object", "Edge Length")
+
+    def set_edge_length(self, length):
+        """
+        Set the length of a the Cube Edge in m
+        """
+        self.set_abstract_item("Space Object", "Edge Length", length)
+
+    def get_drag_area(self):
+        """
+        Get the Drag area of a space object, in m^2
+        """
+        return self.get_abstarct_item("Space Object", "Drag Area")
+
+    def set_drag_area(self, mode="random"):
+        """
+        Set the Drag area of space object, in m^2
+        The mode can be fixed, random
+        The default mode is the random, mode
+        before that the edge length must be set.
+        """
+        try:
+            if(self.get_edge_length()):
+                if (mode == "fixed"):
+                    self.set_abstract_item(
+                        "Space Object",
+                        "Drag Area",
+                        float(self.get_edge_length() * self.get_edge_length()))
+                elif (mode == "random"):
+                    self.set_abstract_item(
+                        "Space Object",
+                        "Drag Area",
+                        #Drag aera of random spinnig cube is
+                        #edge_length * 6/4
+                        (float(self.get_edge_length()) * 6/4))
+        except:
+            self.log.error(
+                "The Cube Length is not set"
+                "Please set it with set_edge_length(l)")
 
 conf = Config()
 conf.set_model("GTO")
 conf.set_mass(2)
+conf.set_edge_length(0.1)
+conf.get_edge_length()
+conf.set_drag_area()
 print conf.get_conf()

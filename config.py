@@ -312,6 +312,87 @@ class Config:
         """
         return self.get_abstarct_item("Space Object", "Drag Area")
 
+    def get_reflect_area(self):
+        """
+        Get the Reflecting area of the Cube
+        """
+        return self.get_abstarct_item("Space Object", "Reflecting Area")
+
+    def set_reflect_area(self, number):
+        """"
+        Sets the refelcting area of the Cubesat.
+        The value would be calculated from the numbers
+        of the reflecting sides of the cubes.
+        """
+        if(number < 7):
+            self.set_abstract_item(
+                "Space Object",
+                "Reflecting Area",
+                float(
+                    self.get_edge_length() * self.get_edge_length() * number))
+        else:
+            self.log.error("A cube had at most 6 Reflectable sides")
+
+    def get_reflect_coef(self):
+        """
+        Gets the Reflectivity Coefficient
+        """
+        return self.get_abstarct_item(
+            "Space Object",
+            "Reflectivity Coefficient")
+
+    def set_reflect_coef(self, coef=1.5):
+        """
+        Sets the Reflectivity Coefficient, Default value 1.5.
+        Is Material connceted and a mean value should be set.
+        """
+        self.set_abstract_item(
+            "Space Object",
+            "Reflectivity Coefficient",
+            coef)
+
+    def get_orbit_type(self):
+        """
+        Gets the orbit type.
+        """
+        return self.get_abstarct_item("Space Object", "Orbit Type")
+
+    def set_orbit_type(self, orbit="LEO"):
+        """
+        Sets the orbit type. Default is LEO (Low Earth Orbit)
+        """
+        self.set_abstract_item("Space Object", "Orbit Type", orbit)
+
+    def get_drag_coef_type(self):
+        """
+        Gets the Drag Coefficent Type
+        """
+        return self.get_abstarct_item(
+            "Space Object",
+            "Drag Coefficent Type")
+
+    def set_drag_coef_type(self, coef="VARIABLE"):
+        """
+        ets the Drag Coefficent Type
+        Per default VARIABLE.
+        """
+        self.set_abstract_item(
+            "Space Object",
+            "Drag Coefficient Type",
+            coef)
+
+    def get_space_object_name(self):
+        """
+        Returns the space objcet name.
+        """
+        return self.get_abstarct_item("Space Object", "Name")
+
+    def set_space_object_name(self, name):
+        """
+        Sets the space object name
+        """
+        self.set_abstract_item("Space Object", "Name", name)
+
     def set_drag_area(self, mode="random"):
         """
         Set the Drag area of space object, in m^2
@@ -337,6 +418,18 @@ class Config:
             self.log.error(
                 "The Cube Length is not set"
                 "Please set it with set_edge_length(l)")
+
+    def get_atmos_model(self):
+        """
+        Get the Atmospheric model
+        """
+        return self.get_abstarct_item("Atmospheric Model", "Atmospheric model")
+
+    def set_atoms_model(self, model="NRLMSISE-00"):
+        """
+        Sets the Atmospheric model, per default NRLMSISE-00
+        """
+        self.get_abstarct_item("Atmospheric Model", "Atmospheric model", model)
 
 conf = Config()
 conf.set_model("GTO")

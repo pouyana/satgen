@@ -13,7 +13,7 @@ from logger import Logger
 from config_converter import Converter
 
 
-class Config:
+class ConfParser:
     def __init__(self, log_level="ERROR"):
         self.config = ConfigParser.ConfigParser()
         self.logger = Logger(log_level)
@@ -55,5 +55,5 @@ class Config:
         self.config.read(file_name)
         print self.config.get("Space Object", "Mass")
 
-config = Config()
+config = ConfigParser()
 config.read_file("sample_1_sim.txt")

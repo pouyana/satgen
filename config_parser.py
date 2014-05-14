@@ -14,7 +14,7 @@ from logger import Logger
 from config_converter import Converter
 
 
-class Config:
+class ConfParser:
     def __init__(self, log_level="ERROR"):
         self.logger = Logger(log_level)
         self.log = self.logger.get_logger()
@@ -92,5 +92,5 @@ class Config:
                 configs[section][option.title()] = config.get(section, option, True)
         print configs["General"]["Model"]
 
-config = Config()
+config = ConfigParser()
 config.read_file("sample_1_sim.txt")

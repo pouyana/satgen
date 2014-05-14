@@ -16,9 +16,15 @@ from config_converter import Converter
 
 class Config:
     def __init__(self, log_level="ERROR"):
-        self.config = ConfigParser.ConfigParser()
         self.logger = Logger(log_level)
         self.log = self.logger.get_logger()
+
+    def config_parser_generator(self):
+        """
+        generates ConfigParser objects where needed
+        """
+        config = ConfigParser.ConfigParser()
+        return config
 
     def check_new_file_cfg(self, file_name):
         """
@@ -42,7 +48,9 @@ class Config:
         file_name = file_name_full["name"]
         given_name = ""
         try:
-            self.config.read(f.name)
+            tmp_config = self.config_parser_generator()
+            tmp_config.read(f.name)
+            del tmp_config
             return f.name
         except ConfigParser.ParsingError as e:
             self.log.warning(
@@ -68,13 +76,21 @@ class Config:
     def read_file(self, file_address):
         """
         Reads the config file contents and
-        generate a configuration dict
+        generates a configuration dict
         """
+        config = self.config_parser_generator()
         file_name = self.check_file(file_address)
-        self.config.read(file_name)
-        sections = self.config.sections()
+        config.read(file_name)
+        sections = config.sections()
+        configs = {}
         for section in sections:
-            print self.config.options(section)
+            configs[section]={}
+            for option in config.options(section):
+                #use the title to capitlize the first leter.
+                #see here:
+                #https://stackoverflow.com/q/12410242
+                configs[section][option.title()] = config.get(section, option, True)
+        print configs["General"]["Model"]
 
 config = Config()
 config.read_file("sample_1_sim.txt")

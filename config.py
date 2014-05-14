@@ -431,6 +431,65 @@ class Config:
         """
         self.get_abstarct_item("Atmospheric Model", "Atmospheric model", model)
 
+    def get_solar_activity_type(self):
+        """
+        Gets the Solar activiy type
+        """
+        return self.get_abstarct_item("Solar Activity", "Solar Activity Type")
+
+    def set_solar_activity_type(self, act_type="MEAN_CONSTANT"):
+        """
+        Sets the Solar Activity Type, per default is the MEAN_CONSTANT
+        """
+        self.set_abstract_item("Solar Activity", "Solar Activity Type", act_type)
+
+    def get_ap_constant_solar_act(self):
+        """
+        Gets AP Constant Equivalent Solar Activity
+        """
+        return self.get_abstarct_item("Solar Activity", "AP Constant Equivalent Solar Activity")
+
+    def set_ap_constant_solar_act(self, ap=15):
+        """
+        Sets AP Constant Equivalent Solar Activity, default value is 15
+        """
+        self.set_abstract_item("Solar Activity", "AP Constant Equivalent Solar Activity", ap)
+
+    def get_f107(self):
+        """
+        Gets the F10.7 Constant Equivalent Solar Activity
+        """
+        return self.get_abstarct_item("Solar Activity", "F10.7 Constant Equivalent Solar Activity")
+
+    def set_f107(self, f107=140):
+        """
+        Sets F10.7 Constant Equivalent Solar Activity, with default value of 140
+        """
+        self.set_abstract_item("Solar Activity", "F10.7 Constant Equivalent Solar Activity", f107)
+
+    def get_intial_date(self):
+        """
+        Gets the initail date of the simulation
+        """
+        return self.get_abstarct_item("Initial Bulletin", "Date")
+
+    def set_initial_date(self, date):
+        """
+        Sets the date, the date can be dot or - splitted yyyy-mm-dd
+        internally it will be changed to yyyy-mm-ddT12:00:00:00.000
+        """
+
+    def get_type_of_sim(self):
+        """
+        Gets the type of Simulation, paramater
+        """
+        return self.get_abstarct_item("Initial Bulletin", "Type")
+
+    def set_type_of_sim(self, sim_type="Perigee/Apogee"):
+        """
+        Sets the type of simulation, per default Perigee/Apogee
+        """
+
 conf = Config()
 conf.set_model("GTO")
 conf.set_mass(2)

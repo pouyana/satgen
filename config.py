@@ -9,6 +9,7 @@ from the command line so please create a configuration file.
 """
 
 from logger import Logger
+import xml.etree.ElementTree as ET
 
 
 class Config:
@@ -620,6 +621,12 @@ class Config:
         Sets the Mean Anomaly in Deg
         """
         self.set_abstract_item("Initial Bulletin", "M (Mean anomaly)", anomaly)
+    
+    def convet_to_xml(self):
+        """
+        Creates an xml configuration from the cfg file
+        """
+        a = ET.Element('a')
 
 conf = Config()
 conf.set_model("GTO")

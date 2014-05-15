@@ -84,12 +84,15 @@ class ConfParser:
         sections = config.sections()
         configs = {}
         for section in sections:
-            configs[section]={}
+            configs[section] = {}
             for option in config.options(section):
                 #use the title to capitlize the first leter.
                 #see here:
                 #https://stackoverflow.com/q/12410242
-                configs[section][option.title()] = config.get(section, option, True)
+                configs[section][option.title()] = config.get(
+                    section,
+                    option,
+                    True)
         print configs["General"]["Model"]
 
 config = ConfigParser()

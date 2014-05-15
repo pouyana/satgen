@@ -441,31 +441,45 @@ class Config:
         """
         Sets the Solar Activity Type, per default is the MEAN_CONSTANT
         """
-        self.set_abstract_item("Solar Activity", "Solar Activity Type", act_type)
+        self.set_abstract_item(
+            "Solar Activity",
+            "Solar Activity Type",
+            act_type)
 
     def get_ap_constant_solar_act(self):
         """
         Gets AP Constant Equivalent Solar Activity
         """
-        return self.get_abstract_item("Solar Activity", "AP Constant Equivalent Solar Activity")
+        return self.get_abstract_item(
+            "Solar Activity",
+            "AP Constant Equivalent Solar Activity")
 
     def set_ap_constant_solar_act(self, ap=15):
         """
         Sets AP Constant Equivalent Solar Activity, default value is 15
         """
-        self.set_abstract_item("Solar Activity", "AP Constant Equivalent Solar Activity", ap)
+        self.set_abstract_item(
+            "Solar Activity",
+            "AP Constant Equivalent Solar Activity",
+            ap)
 
     def get_f107(self):
         """
         Gets the F10.7 Constant Equivalent Solar Activity
         """
-        return self.get_abstract_item("Solar Activity", "F10.7 Constant Equivalent Solar Activity")
+        return self.get_abstract_item(
+            "Solar Activity",
+            "F10.7 Constant Equivalent Solar Activity")
 
     def set_f107(self, f107=140):
         """
-        Sets F10.7 Constant Equivalent Solar Activity, with default value of 140
+        Sets F10.7 Constant Equivalent Solar Activity,
+        with default value of 140
         """
-        self.set_abstract_item("Solar Activity", "F10.7 Constant Equivalent Solar Activity", f107)
+        self.set_abstract_item(
+            "Solar Activity",
+            "F10.7 Constant Equivalent Solar Activity",
+            f107)
 
     def get_intial_date(self):
         """
@@ -503,7 +517,6 @@ class Config:
         """
         self.set_abstract_item("Initial Bulletin", "Frame", frame)
 
-
     def get_nature(self):
         """
         Gets the Nature of Simulation
@@ -516,24 +529,30 @@ class Config:
         """
         self.set_abstract_item("Initial Bulletin", "Nature", nature)
 
-
     def get_preigee_alt(self):
         """
         Gets the Perigee Altitude in Km
         """
-        return self.get_abstract_item("Initial Bulletin", "Zp (Perigee altitude)")
+        return self.get_abstract_item(
+            "Initial Bulletin",
+            "Zp (Perigee altitude)")
 
     def set_perigee_alt(self, alt):
         """
         Sets the perigee Altitude in Km
         """
-        self.set_abstract_item("Initial Bulletin", "Zp (Perigee altitude)", alt)
+        self.set_abstract_item(
+            "Initial Bulletin",
+            "Zp (Perigee altitude)",
+            alt)
 
     def get_apogee_alt(self):
         """
         Gets the Apogee altitude in Km
         """
-        return self.get_abstract_item("Initial Bulletin", "Za (Apogee altitude)")
+        return self.get_abstract_item(
+            "Initial Bulletin",
+            "Za (Apogee altitude)")
 
     def set_apogee_alt(self, alt):
         """
@@ -551,31 +570,44 @@ class Config:
         """
         Sets the Inclination in Deg
         """
-        self.set_abstract_item("Initial Bulletin", "I (Inclination)", inclination)
+        self.set_abstract_item(
+            "Initial Bulletin",
+            "I (Inclination)",
+            inclination)
 
     def get_raan(self):
         """
         Gets the RAAN (Right Ascension of Ascending Node) in Deg
         """
-        return self.get_abstract_item("Initial Bulletin", "RAAN (Right Ascension of Ascending Node)")
+        return self.get_abstract_item(
+            "Initial Bulletin",
+            "RAAN (Right Ascension of Ascending Node)")
 
     def set_raan(self, rann):
         """
         Sets RAAN (Right Ascension of Ascending Node) in Deg
         """
-        self.set_abstract_item("Initial Bulletin", "RAAN (Right Ascension of Ascending Node)", raan)
+        self.set_abstract_item(
+            "Initial Bulletin",
+            "RAAN (Right Ascension of Ascending Node)",
+            raan)
 
     def get_arg_perigee(self):
         """
         Gets the Argument of prigee in Deg
         """
-        return self.get_abstract_item("Initial Bulletin", "w (Argument of perigee)")
+        return self.get_abstract_item(
+            "Initial Bulletin",
+            "w (Argument of perigee)")
 
     def set_arg_perigee(self, arg):
         """
         Sets the Argument of perigee in Deg
         """
-        self.set_abstract_item("Initial Bulletin", "w (Argument of perigee)", arg)
+        self.set_abstract_item(
+            "Initial Bulletin",
+            "w (Argument of perigee)",
+            arg)
 
     def get_mean_anomaly(self):
         """

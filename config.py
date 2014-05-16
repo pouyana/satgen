@@ -10,7 +10,7 @@ from the command line so please create a configuration file.
 
 from logger import Logger
 import xml.etree.ElementTree as ET
-
+from ElementTree_pretty import prettify
 
 class Config:
     def __init__(self, log_level="ERROR"):
@@ -424,7 +424,9 @@ class Config:
         """
         Get the Atmospheric model
         """
-        return self.get_abstract_item("Atmospheric Model", "Atmospheric model")
+        return self.get_abstract_item(
+            "Atmospheric Model",
+            "Atmospheric model")
 
     def set_atoms_model(self, model="NRLMSISE-00"):
         """
@@ -559,7 +561,10 @@ class Config:
         """
         Sets the Apogee altitude in Km
         """
-        self.set_abstract_item("Initial Bulletin", "Za (Apogee altitude)", alt)
+        self.set_abstract_item(
+            "Initial Bulletin",
+            "Za (Apogee altitude)",
+            alt)
 
     def get_incl(self):
         """
@@ -614,24 +619,198 @@ class Config:
         """
         Gets the Mean Anomaly in Deg
         """
-        return self.get_abstract_item("Initial Bulletin". "M (Mean anomaly)")
+        return self.get_abstract_item("Initial Bulletin", "M (Mean anomaly)")
 
     def set_mean_anomaly(self, anomaly):
         """
         Sets the Mean Anomaly in Deg
         """
-        self.set_abstract_item("Initial Bulletin", "M (Mean anomaly)", anomaly)
-    
+        self.set_abstract_item(
+            "Initial Bulletin",
+            "M (Mean anomaly)",
+            anomaly)
+
+    def set_semi_major_axis(self, axis):
+        """
+        Sets the SemiMajor Axis in km
+        """
+        self.set_abstract_item("Initial Bulletin", "a", axis)
+
+    def get_semi_major_axis(self):
+        """
+        Gets the SemiMajor Axis in km
+        """
+        return self.get_abstract_item("Initial Bulletin", "a")
+
+    def set_eX(self, eX):
+        """
+        Sets the eX Orbital Parameter
+        """
+        self.set_abstract_item("Initial Bulletin", "eX", eX)
+
+    def get_eX(self):
+        """
+        Gets the eX Orbital Parameter
+        """
+        return self.get_abstract_item("Initial Bulletin", "eX")
+
+    def set_eY(self, eY):
+        """
+        Sets the eY Orbital Parameter
+        """
+        self.set_abstract_item("Initial Bulletin", "eY", eY)
+
+    def get_eY(self):
+        """
+        Gets the eY Orbital Parameter
+        """
+        return self.get_abstract_item("Initial Bulletin", "eY")
+
+    def set_iX(self, iX):
+        """
+        Sets the Orbital Parameter iX
+        """
+        self.set_abstract_item("Initial Bulletin", "iX", iX)
+
+    def get_iX(self):
+        """
+        Gets the Orbital Parameter iX
+        """
+        return self.get_abstract_item("Initial Bulletin", "iX")
+
+    def set_iY(self, iY):
+        """
+        Sets the Orbital Parameter iY
+        """
+        self.set_abstract_item("Initial Bulletin", "iY", iY)
+
+    def get_iY(self):
+        """
+        Gets the Orbital Parameter iY
+        """
+        return self.get_abstract_item("Initial Bulletin", "iY")
+
+    def set_lambdaEq(self, lambdaEq):
+        """
+        Sets the Orbital Parameter lambdaEq in Deg
+        """
+        self.set_abstract_item("Initial Bulletin", "lambdaEq", lambdaEq)
+
+    def get_lambdaEq(self):
+        """
+        Gets the Orbital Parameter lambdaEq in Deg
+        """
+        return self.get_abstract_item("Initial Bulletin", "lambdaEq")
+
+    def set_epoch_tfe(self, date):
+        """
+        Sets the epochTFE with the date
+        """
+        self.set_abstract_item("Initial Bulletin", "epochTFE", date)
+
+    def get_eppch_tfe(self):
+        """
+        Returns the epochTFE
+        """
+        return self.get_abstract_item("Initial Bulletin", "epochTFE")
+
+    def set_func_value_accu(self, accu):
+        """
+        Sets functional Value Accuracy of Iteration in days
+        """
+        self.set_abstract_item(
+            "Iteration Data",
+            "Function Value Accuracy",
+            accu)
+
+    def get_func_value_accu(self):
+        """
+        Gets the functional Value Accuracy of Iteration in days
+        """
+        return self.get_abstract_item(
+            "Iteration Data",
+            "Function Value Accuracy")
+
+    def get_exp_dur(self):
+        """
+        Gets the Expiring Duration in years
+        """
+        return self.get_abstract_item(
+            "Iteration Data",
+            "Expiring Duration")
+
+    def set_exp_dur(self, dur):
+        """
+        Sets the expiring duration in years
+        """
+        self.set_abstract_item(
+            "Iteration Data",
+            "Expiring Duration")
+
+    def get_sim_minus_exp(self):
+        """
+        Gets the Simulation Minus Expireing Duration in years
+        """
+        return self.get_abstract_item(
+            "Iteration Data",
+            "Simulation Minus Expireing Duration")
+
+    def set_sim_minus_exp(self, exp):
+        """
+        Sets the Simulation Minus Expireing Duration in years
+        """
+        self.set_abstract_item(
+            "Iteration Data",
+            "Simulation Minus Expireing Duration")
+
+    def set_iter_method(self, method="FrozenOrbit"):
+        """
+        Sets the Iteration Method
+        """
+        self.set_abstract_item(
+            "Iteration Data",
+            "Iteration Method",
+            method)
+
+    def get_iter_method(self):
+        """
+        Gets the Iteration Method
+        """
+        self.get_abstract_item("Iteration Data", "Iteration Method")
+
+    def get_stela_version(self):
+        """
+        Gets the Stela Version
+        """
+        return self.get_abstract_item("General", "Stela Version")
+
+    def set_stela_version(self, version):
+        """
+        Sets the Stela Version
+        """
+        self.set_abstract_item("General", "Stela Version", version)
+
     def convet_to_xml(self):
         """
         Creates an xml configuration from the cfg file
         """
-        a = ET.Element('a')
+        #set the parent
+        leosimulation = ET.Element('LEOSimulation')
+        leosimulation.set("Version", self.get_stela_version())
+        #Stela Version
+        stelaversion = ET.SubElement(leosimulation, 'STELAVersion')
+        stelaversion.text = self.get_stela_version()
+        #spaceobject
+        print prettify(leosimulation)
+        #tree.write('output.xml')
+
 
 conf = Config()
 conf.set_model("GTO")
 conf.set_mass(2)
+conf.set_stela_version("2.5.1")
 conf.set_edge_length(0.1)
 conf.get_edge_length()
 conf.set_drag_area()
+conf.convet_to_xml()
 print conf.get_conf()

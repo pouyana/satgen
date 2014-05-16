@@ -10,7 +10,7 @@ from the command line so please create a configuration file.
 
 from logger import Logger
 import xml.etree.ElementTree as ET
-from ElementTree_pretty import prettify
+from xml_pretty import prettify
 
 class Config:
     def __init__(self, log_level="ERROR"):

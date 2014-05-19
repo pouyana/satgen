@@ -9,8 +9,10 @@ from the command line so please create a configuration file.
 """
 
 from logger import Logger
+from config_dict import ConfigDict
 import xml.etree.ElementTree as ET
 from xml_pretty import prettify
+
 
 class Config:
     def __init__(self, log_level="ERROR"):
@@ -35,7 +37,7 @@ class Config:
         try:
             return self.conf[section][option]
         except KeyError as e:
-            self.log.error("Key or value not found please try again ")
+            self.log.warning("Key or value not found please try again ")
             return None
 
     def get_conf(self):
@@ -306,24 +308,37 @@ class Config:
         Set the length of a the Cube Edge in m
         """
         self.set_abstract_item("Space Object", "Edge Length", length)
+        self.set_drag_area()
+        self.set_reflect_area()
 
     def get_drag_area(self):
         """
         Get the Drag area of a space object, in m^2
         """
-        return self.get_abstract_item("Space Object", "Drag Area")
+        result = self.get_abstract_item("Space Object", "Drag Area")
+        if(result):
+            return result
+        else:
+            self.set_drag_area()
+            return self.get_drag_area()
+
 
     def get_reflect_area(self):
         """
         Get the Reflecting area of the Cube
         """
-        return self.get_abstract_item("Space Object", "Reflecting Area")
+        result = self.get_abstract_item("Space Object", "Reflecting Area")
+        if(result):
+            return result
+        else:
+            self.set_reflect_area()
+            return self.get_reflect_area()
 
-    def set_reflect_area(self, number):
+    def set_reflect_area(self, number=6):
         """"
         Sets the refelcting area of the Cubesat.
         The value would be calculated from the numbers
-        of the reflecting sides of the cubes.
+        of the reflecting sides of the cubes.Default value of 6.
         """
         if(number < 7):
             self.set_abstract_item(
@@ -338,9 +353,14 @@ class Config:
         """
         Gets the Reflectivity Coefficient
         """
-        return self.get_abstract_item(
+        result = self.get_abstract_item(
             "Space Object",
             "Reflectivity Coefficient")
+        if(result):
+            return result
+        else:
+            self.set_reflect_coef()
+            return self.get_reflect_coef()
 
     def set_reflect_coef(self, coef=1.5):
         """
@@ -356,7 +376,12 @@ class Config:
         """
         Gets the orbit type.
         """
-        return self.get_abstract_item("Space Object", "Orbit Type")
+        result =self.get_abstract_item("Space Object", "Orbit Type")
+        if(result):
+            return result
+        else:
+            self.set_orbit_type()
+            return self.get_orbit_type()
 
     def set_orbit_type(self, orbit="LEO"):
         """
@@ -366,15 +391,15 @@ class Config:
 
     def get_drag_coef_type(self):
         """
-        Gets the Drag Coefficent Type
+        Gets the Drag Coefficient Type
         """
         return self.get_abstract_item(
             "Space Object",
-            "Drag Coefficent Type")
+            "Drag Coefficient Type")
 
     def set_drag_coef_type(self, coef="VARIABLE"):
         """
-        ets the Drag Coefficent Type
+        ets the Drag Coefficient Type
         Per default VARIABLE.
         """
         self.set_abstract_item(
@@ -414,7 +439,7 @@ class Config:
                         "Drag Area",
                         #Drag aera of random spinnig cube is
                         #edge_length * 6/4
-                        (float(self.get_edge_length()) * 6/4))
+                        (float(self.get_edge_length() * self.get_edge_length()) * 6/4))
         except:
             self.log.error(
                 "The Cube Length is not set"
@@ -794,6 +819,8 @@ class Config:
         """
         Creates an xml configuration from the cfg file
         """
+        config_dict = ConfigDict()
+        dictio = config_dict.get_dict()
         #set the parent
         leosimulation = ET.Element('LEOSimulation')
         leosimulation.set("Version", self.get_stela_version())
@@ -801,16 +828,36 @@ class Config:
         stelaversion = ET.SubElement(leosimulation, 'STELAVersion')
         stelaversion.text = self.get_stela_version()
         #spaceobject
+        spaceobject = ET.SubElement(leosimulation, dictio["Space Object"])
+        for k, v in self.get_conf()["Space Object"].items():
+            if(k!= "Edge Length"):
+                tmp_el = ET.SubElement(spaceobject, dictio[k])
+                tmp_el.text = str(v)
+        #mass
+        #mass = ET.SubElement(spaceobject, dictio['Mass'])
+        #mass.set('unit', 'kg')
+        #mass.text = str(self.get_mass())
+        #drag_area
+        #dragarea = ET.SubElement(spaceobject, dictio["Drag Area"])
+        #dragarea.text = str(self.get_drag_area())
+        #reflectingarea
+        #reflectingarea = ET.SubElement(spaceobject, dictio["Reflecting Area"])
+        #reflectingarea.text = str(self.get_reflect_area())
+        #reflectingcoefficient
+        #reflectivitycoefficient = ET.SubElement(spaceobject, dictio["Reflectivity Coefficient"])
+        #reflectivitycoefficient.text = str(self.get_reflect_coef())
+        #orbittype
+        #orbittype = ET.SubElement(spaceobject, dictio["Orbit Type"])
+        #orbittype.text = self.get_orbit_type()
         print prettify(leosimulation)
         #tree.write('output.xml')
 
 
 conf = Config()
 conf.set_model("GTO")
-conf.set_mass(2)
+conf.set_mass(2.0)
 conf.set_stela_version("2.5.1")
 conf.set_edge_length(0.1)
 conf.get_edge_length()
-conf.set_drag_area()
 conf.convet_to_xml()
 print conf.get_conf()

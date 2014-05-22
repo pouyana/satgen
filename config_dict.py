@@ -23,12 +23,14 @@ class ConfigDict:
             "Function Value Accuracy": "days",
             "Expiring Duration" : "years",
             "Simulation Minus Expiring Duration" : "years",
-            "Zp (Perigee altitude)" : "rad",
-            "Za (Apogee altitude)" : "rad",
+            "Zp (Perigee altitude)" : "m",
+            "Za (Apogee altitude)" : "m",
             "Inclination" : "rad",
             "I (Inclination)" : "rad",
-            "rAAN (Right Ascension of Ascending Node)" : "rad"
-            "meanAnomaly" : "rad"}
+            "RAAN (Right Ascension of Ascending Node)" : "rad",
+            "M (Mean anomaly)" : "rad",
+            "w (Argument of perigee)" : "rad"}
+        return unit_dict
 
 
     def get_dict(self):
@@ -77,13 +79,25 @@ class ConfigDict:
             "Zp (Perigee altitude)" : "perigeeAltitude",
             "Za (Apogee altitude)" : "apogeeAltitude",
             "I (Inclination)" : "inclination",
-            "rAAN" : "RAAN (Right Ascension of Ascending Node)",
+            "RAAN (Right Ascension of Ascending Node)" : "rAAn",
             "w (Argument of perigee)" : "argOfPerigee",
             "M (Mean anomaly)" : "meanAnomaly",
             "a (Semi major axis)" : "semiMajorAxis",
             "e (Eccentricity)" : "eccentricity",
             "lambdaEq" : "lambdaEq",
             "Atmospheric model" : "atmosModel",
+            "longitudeTFE" : "longitudeTFE",
+            "epochTFE" : "epochTFE",
+            "eX" : "eX",
+            "eY" : "eY",
+            "iX" : "iX",
+            "iY" : "iY",
+            "x" : "x",
+            "y" : "y",
+            "z" : "z",
+            "vX" : "vX",
+            "vY" : "vY",
+            "vZ" : "vZ",
             "Solar Activity Type MEAN_CONSTANT" : "ConstantEquivalentSolarActivity",
             "Solar Activity Type" : "solActType",
             "AP Constant Equivalent Solar Activity" : "constantAP",
@@ -95,3 +109,18 @@ class ConfigDict:
             "Expiring Duration": "expDuration"}
         return config_dict
 
+    def get_conf_sim(self, type_of_sim):
+        """
+        Gives an array of paramaters that are possible for everry Simulation Type
+        Input: Type0PosVel, Type1PosVel, Type8PosVel and Type2PosVel
+        """
+        result = []
+        if(type_of_sim=="Type0PosVel"):
+            result = ["Zp (Perigee altitude)", "Za (Apogee altitude)", "I (Inclination)", "RAAN (Right Ascension of Ascending Node)", "w (Argument of perigee)", "M (Mean anomaly)"]
+        if(type_of_sim=="Type8PosVel"):
+            result = ["longitudeTFE", "epochTFE", "a (Semi major axis)", "lambdaEq", "eX", "eY", "iX", "iY"]
+        if(type_of_sim=="Type2PosVel"):
+            result = ["longitudeTFE", "epochTFE", "a (Semi major axis)" ,"e (Eccentricity)", "I (Inclination)", "RAAN (Right Ascension of Ascending Node)", "w (Argument of perigee)","M (Mean anomaly)"]
+        if(type_of_sim=="Type1PosVel"):
+            result = ["longitudeTFE", "epochTFE", "x", "y", "z", "vX", "vY", "vZ"]
+        return result

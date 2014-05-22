@@ -8,6 +8,7 @@ Satgen can not accept all the parameters
 from the command line so please create a configuration file.
 """
 
+from time import gmtime, strftime
 from logger import Logger
 from config_dict import ConfigDict
 import xml.etree.ElementTree as ET
@@ -815,12 +816,22 @@ class Config:
         """
         self.set_abstract_item("General", "Stela Version", version)
 
+    def values_to_keys(self, want_value, dictio):
+        """
+        Returns key from the given values, for dicts
+        """
+        for key, is_value in dictio.items():
+            if (is_value == want_value):
+                return key
+    
     def convet_to_xml(self):
         """
         Creates an xml configuration from the cfg file
         """
         config_dict = ConfigDict()
         dictio = config_dict.get_dict()
+
+        unit_dict = config_dict.get_unit_dict()
         #set the parent
         leosimulation = ET.Element('LEOSimulation')
         leosimulation.set("Version", self.get_stela_version())
@@ -833,6 +844,24 @@ class Config:
             if(k!= "Edge Length"):
                 tmp_el = ET.SubElement(spaceobject, dictio[k])
                 tmp_el.text = str(v)
+                if k in unit_dict:
+                    tmp_el.set('unit',unit_dict[k])
+        ephemerisman = ET.SubElement(leosimulation, 'EphemerisManager')
+        ephemerisman.set('Version', self.get_stela_version())
+        initstate = ET.SubElement(ephemerisman, 'initState')
+        bulletin = ET.SubElement(initstate, 'bulletin')
+        bulletin.set('Version',self.get_stela_version())
+        date = strftime("%Y-%m-%dT%H:%M:%S.000", gmtime())
+        date_element = ET.SubElement(bulletin,'date')
+        date_element.text = date
+        #setting the type of simulation.
+        sim_type_element = ET.SubElement(bulletin,dictio["Type "+self.get_type_of_sim()])
+        for param in config_dict.get_conf_sim(sim_type_element.tag):
+            tm_el = ET.SubElement(sim_type_element,dictio[param])
+            tm_el.text = str(self.get_abstract_item("Initial Bulletin",param))
+            if param in unit_dict:
+                tm_el.set('unit',unit_dict[param])
+        finishstate = ET.SubElement(ephemerisman,'finalState')
         #mass
         #mass = ET.SubElement(spaceobject, dictio['Mass'])
         #mass.set('unit', 'kg')
@@ -856,8 +885,12 @@ class Config:
 conf = Config()
 conf.set_model("GTO")
 conf.set_mass(2.0)
+conf.set_perigee_alt(700000000)
 conf.set_stela_version("2.5.1")
 conf.set_edge_length(0.1)
+conf.set_orbit_type("LEO")
+conf.set_space_object_name("AAAAA")
+conf.set_type_of_sim("Perigee/Apogee")
 conf.get_edge_length()
 conf.convet_to_xml()
 print conf.get_conf()

@@ -11,6 +11,8 @@ import argparse
 import random
 import string
 from config_converter import Converter
+from config_parser import ConfParser
+from config import Config
 
 
 def set_verbose_level(level, quiet=False):
@@ -69,12 +71,20 @@ def main():
         "--name",
         nargs='?',
         help="satellite name (default random 8 chars)")
+    parser.add_argument(
+        "-c",
+        "--config",
+        nargs='?',
+        help="config file, read config from cfg")
     args = parser.parse_args()
     verbose = set_verbose_level(args.verbose, args.quiet)
     name = set_name(args.name)
-    converter = Converter(log_level=verbose)
-    converter.read_file("sample_1_sim.txt")
-    print name
+    config = Config(log_level=verbose)
+    if(args.config):
+        conf_parser = ConfParser(log_level=verbose)
+        config_from_file = conf_parser.read_file(args.config)
+        config.set_conf(config_from_file)
+        print config.convert_to_xml()
 
 if (__name__ == "__main__"):
     main()

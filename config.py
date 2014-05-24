@@ -47,6 +47,12 @@ class Config:
         """
         return self.conf
 
+    def set_conf(self, conf):
+        """
+        Sets the conf file from the conf dict
+        """
+        self.conf = conf
+
     def get_config_general(self):
         """
         Gives the General configuration back
@@ -228,7 +234,7 @@ class Config:
         """
         Gets the Sun switch, Boolean.
         """
-        return self.get_abstract_item("General", "Sun switch")
+        return self.get_abstract_item("General", "Sun Switch")
 
     def set_sun_switch(self, switch=True):
         """
@@ -391,21 +397,21 @@ class Config:
 
     def get_drag_coef_type(self):
         """
-        Gets the Drag Coefficient Type
+        Gets the Drag Coefficent Type
         """
         return self.get_abstract_item(
             "Space Object",
-            "Drag Coefficient Type")
+            "Drag Coefficent Type")
 
     def set_drag_coef_type(self, coef="VARIABLE"):
         """
-        ets the Drag Coefficient Type
+        ets the Drag Coefficent Type
         Per default VARIABLE the other value would be the CONSTANT
         """
         self.set_abstract_item(
             "Space Object",
-            "Drag Coefficient Type",
-            "Drag Coefficient Type "+coef)
+            "Drag Coefficent Type",
+            "Drag Coefficent Type "+coef)
 
     def get_space_object_name(self):
         """
@@ -451,7 +457,7 @@ class Config:
         """
         return self.get_abstract_item(
             "Atmospheric Model",
-            "Atmospheric model")
+            "Atmospheric Model")
 
     def set_atoms_model(self, model="NRLMSISE-00"):
         """
@@ -659,13 +665,13 @@ class Config:
         """
         Sets the SemiMajor Axis in km
         """
-        self.set_abstract_item("Initial Bulletin", "a", axis)
+        self.set_abstract_item("Initial Bulletin", "a (Semi major axis)", axis)
 
     def get_semi_major_axis(self):
         """
         Gets the SemiMajor Axis in km
         """
-        return self.get_abstract_item("Initial Bulletin", "a")
+        return self.get_abstract_item("Initial Bulletin", "a (Semi major axis)".title())
 
     def set_eX(self, eX):
         """
@@ -819,8 +825,8 @@ class Config:
         """
         Sets the value for the Constant drag coeficient
         """
-        if(self.get_conf()["Space Object"]["Drag Coefficient Type"] ==
-           "Drag Coefficient Type CONSTANT"):
+        if(self.get_conf()["Space Object"]["Drag Coefficent Type"] ==
+           "Drag Coefficent Type CONSTANT"):
                 self.set_abstract_item(
                     "Space Object",
                     "Constant Drag Coef",
@@ -828,7 +834,7 @@ class Config:
 
     def get_drag_coef_const(self):
         """
-        Returns the constant Drag Coefficient
+        Returns the constant Drag Coefficent
         """
         return self.get_abstract_item("Space Object", "Constant Drag Coef")
 
@@ -844,109 +850,139 @@ class Config:
             self,
             parent,
             key_value_dict,
-            unit_dict,
-            trans_dict={},
-            exceptions=[]):
+            unit_dict=dict(),
+            sort_dict=dict(),
+            trans_dict=dict(),
+            exceptions=list()):
         """
-        Parses a dict, to xml elements with the given parent
-        if a key dict exist, use it.
-        if a exception list exist, check the keys agianst exceptions
-        default just parse withut exceptions and value_list.
-        uses also config to xml trans list.
-        if they have units add the units too from unit_dict.
+        Parses the keys and values dict with help of 
+        unit_dict, sort_dict, transition_dict and the excpetion list.
         """
-        for k, v in key_value_dict.items():
-            if(k not in exceptions):
-                tmp_el = ET.SubElement(parent, trans_dict[k])
-                tmp_el.text = str(v)
-                if k in unit_dict:
-                    tmp_el.set('unit', unit_dict[k])
+        conf_dict = ConfigDict()
+        sorted_list = sorted(
+            key_value_dict.items(),
+            key=lambda x: sort_dict.get(x[0]))
+        for sort_item in sorted_list:
+            if(sort_item[0] not in exceptions and sort_item[0] != "Drag Coefficent Type"):
+                tmp_el = ET.SubElement(parent, str(trans_dict[sort_item[0]]))
+                tmp_el.text = str(sort_item[1])
+                if sort_item[0] in unit_dict:
+                    tmp_el.set('unit', str(unit_dict[sort_item[0]]))
+            #exception Atmospheric Model
+            if(sort_item[0] == "Atmospheric Model"):
+                atmos = ET.SubElement(parent, str(trans_dict["Atmospheric model"]))
+                atmos.text = self.get_atmos_model()
 
-    def parse_drag_coef(self, parent, dictio):
-        """
-        Parses the drag coeeficient variable or constant values the right way
-        addes them to the parent xml element
-        """
-        drag_co_type = self.get_conf()["Space Object"]["Drag Coefficient Type"]
-        drag_co_el = ET.SubElement(parent, dictio[drag_co_type])
-        if(drag_co_type == "Drag Coefficient Type CONSTANT"):
-            drag_co_const = ET.SubElement(
-                drag_co_el,
-                dictio["Constant Drag Coef"])
-            drag_co_const.text = str(self.get_drag_co_const())
+            #exception Drag Coefficient
+            if(sort_item[0] == "Drag Coefficent Type"):
+                drag_co_type = self.get_conf()["Space Object"]["Drag Coefficent Type"]
+                drag_co_el = ET.SubElement(
+                    parent,
+                    str(trans_dict["Drag Coefficent Type " + drag_co_type]))
+                if(drag_co_type == "Drag Coefficent Type CONSTANT"):
+                    drag_co_const = ET.SubElement(
+                        drag_co_el,
+                        str(trans_dict["Constant Drag Coef"]))
+                    drag_co_const.text = str(self.get_drag_co_const())
+            #exception Solar Activity
+            if(sort_item[0] == "Solar Activity Type"):
+                solar_act_type = self.get_solar_activity_type()
+                tmp_el = ET.SubElement(
+                    parent,
+                    str(trans_dict["Solar Activity Type " + solar_act_type]))
+                if(solar_act_type == "VARIABLE"):
+                    solar_act_type_el = ET.SubElement(
+                        tmp_el, str(trans_dict["Solar Activity Type"]))
+                    solar_act_type_el.text = str(self.get_solar_activity_type())
+                else:
+                    self.parse_elements(
+                        tmp_el,                                                     
+                        self.get_conf()["Solar Activity"],                          
+                        unit_dict,
+                        config_dict.get_sort_solat_act(),
+                        trans_dict)
+            #exception Iteration Data
+            if(sort_item[0] == "Iteration Data"):
+                iteration = ET.SubElement(parent, str(trans_dict["Iteration Data"]))
+                self.parse_elements(
+                    iteration,
+                    self.get_conf()["Iteration Data"],
+                    unit_dict,
+                    conf_dict.get_sort_iteration_data(),
+                    trans_dict)
 
-    def parse_solar_act(self, parent, unit_dict, dictio):
-        """
-        Sets the Solaractivity modes
-        """
-        solar_act_type = self.get_solar_activity_type()
-        tmp_el = ET.SubElement(
-            parent, dictio["Solar Activity Type " + solar_act_type])
-        if(solar_act_type == "VARIABLE"):
-            solar_act_type_el = ET.SubElement(
-                tmp_el, dictio["Solar Activity Type"])
-            solar_act_type_el.text = str(self.get_solar_activity_type())
-        else:
-            self.parse_elements(
-                tmp_el,
-                self.get_conf()["Solar Activity"],
-                unit_dict, dictio)
 
     def get_xml_file_name(self):
+        """
+        Get the xml_file name generated
+        """
         name = self.get_space_object_name()
         edge_length = self.get_edge_length()
         mass = self.get_mass()
         sat_name = name+"_"+str(mass)+"_"+str(edge_length)+".xml"
         return sat_name
 
-    def convet_to_xml(self):
+    def convert_to_xml(self):
         """
         Creates an xml configuration from the cfg file
         """
         config_dict = ConfigDict()
         dictio = config_dict.get_dict()
+        sort_space_object = config_dict.get_sort_space_object()
         unit_dict = config_dict.get_unit_dict()
+        self.set_abstract_item(
+            "General",
+            "Solar Activity Type",
+            self.get_solar_activity_type())
+        self.set_abstract_item(
+            "General",
+            "Iteration Data",
+            "")
+        self.set_abstract_item(
+            "General",
+            "Atmospheric Model",
+            "")
+        self.set_stela_version("2.5.0")
         leosimulation = ET.Element('LEOSimulation')
-        leosimulation.set("Version", self.get_stela_version())
+        leosimulation.set("version", str(self.get_stela_version()))
+        stelaversion = ET.SubElement(leosimulation, 'STELAVersion')
+        stelaversion.text = "2.5.1"
         spaceobject = ET.SubElement(leosimulation, dictio["Space Object"])
         self.parse_elements(
             spaceobject,
             self.get_conf()["Space Object"],
             unit_dict,
+            sort_space_object,
             dictio,
-            ["Edge Length", "Drag Coefficient Type",
-                "Drag Coefficient Type CONSTANT"])
-        self.parse_drag_coef(spaceobject, dictio)
+            ["Edge Length", "Constant Drag Coef"])
         ephemerisman = ET.SubElement(leosimulation, 'EphemerisManager')
-        ephemerisman.set('Version', self.get_stela_version())
+        ephemerisman.set('version', str(self.get_stela_version()))
         initstate = ET.SubElement(ephemerisman, 'initState')
         bulletin = ET.SubElement(initstate, 'bulletin')
-        bulletin.set('Version', self.get_stela_version())
+        bulletin.set('version', str(self.get_stela_version()))
         date = strftime("%Y-%m-%dT%H:%M:%S.000", gmtime())
         date_element = ET.SubElement(bulletin, 'date')
         date_element.text = date
         sim_type_element = ET.SubElement(
-            bulletin, dictio["Type " + self.get_type_of_sim()])
+            bulletin, str(dictio["Type " + self.get_type_of_sim()]))
         for param in config_dict.get_conf_sim(sim_type_element.tag):
-            tmp_el = ET.SubElement(sim_type_element, dictio[param])
+            tmp_el = ET.SubElement(sim_type_element, str(dictio[param]))
             tmp_el.text = str(
-                self.get_abstract_item("Initial Bulletin", param))
+               self.get_abstract_item("Initial Bulletin", param.title()))
             if param in unit_dict:
-                tmp_el.set('unit', unit_dict[param])
+                tmp_el.set('unit', str(unit_dict[param]))
         finishstate = ET.SubElement(ephemerisman, 'finalState')
         self.parse_elements(
-            leosimulation,
-            self.get_conf()["General"],
-            unit_dict, dictio,
-            ["Edge Length"])
-        iteration = ET.SubElement(leosimulation, dictio["Iteration Data"])
-        self.parse_elements(
-            iteration,
-            self.get_conf()["Iteration Data"],
-            unit_dict,
-            dictio)
-        atmos = ET.SubElement(leosimulation, dictio["Atmospheric model"])
-        atmos.text = self.get_atmos_model()
-        self.parse_solar_act(leosimulation, unit_dict, dictio)
+             leosimulation,
+             self.get_conf()["General"],
+             unit_dict,
+             config_dict.get_sort_general(),
+             dictio,
+            [
+            "Stela Version",
+            "Edge Length",
+            "Solar Activity Type",
+            "Atmospheric Model" ,
+            "Earth Tesseral Switch",
+            "Iteration Data"])
         return prettify(leosimulation)
-

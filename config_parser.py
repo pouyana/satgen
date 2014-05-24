@@ -73,6 +73,12 @@ class ConfParser:
                 file_name = converter.convert_file(f.name)
             return file_name
 
+    def strip_alpha(self, word):
+        """
+        removes all alphabetic chars from the word
+        """
+        return re.sub("[^0123456789\.]", "", word)
+
     def read_file(self, file_address):
         """
         Reads the config file contents and
@@ -89,11 +95,9 @@ class ConfParser:
                 #use the title to capitlize the first leter.
                 #see here:
                 #https://stackoverflow.com/q/12410242
-                configs[section][option.title()] = config.get(
-                    section,
-                    option,
-                    True)
-        print configs["General"]["Model"]
-
-config = ConfigParser()
-config.read_file("sample_1_sim.txt")
+                config_value=config.get(section, option, True)
+                if(re.search("(?=.*\d)(?=.*[A-Za-z])[A-Za-z0-9]",config_value) and
+                   option!="atmospheric model"):
+                    config_value = self.strip_alpha(config_value)
+                configs[section][option.title()] = config_value
+        return configs

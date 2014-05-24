@@ -39,6 +39,7 @@ class ConfigDict:
         XML
         """
         config_dict = {
+            "Stela Version" : "STELAVersion",
             "Model" : "modelType",
             "Author" : "author",
             "Comment" : "comment",
@@ -63,7 +64,8 @@ class ConfigDict:
             "Reflecting Area" : "reflectingArea",
             "Reflectivity Coefficient" : "reflectivityCoefficient",
             "Orbit Type" : "orbitType",
-            "Drag Coefficent Type CONSTANT" : "ConstantDragCoef",
+            "Drag Coefficient Type CONSTANT" : "ConstantDragCoef",
+            "Drag Coefficient Type VARIABLE" : "VariableDragCoef",
             "Constant Drag Coef" : "cstDragCoef",
             "Space Object" : "SpaceObject",
             "Name" : "name",
@@ -99,6 +101,8 @@ class ConfigDict:
             "vY" : "vY",
             "vZ" : "vZ",
             "Solar Activity Type MEAN_CONSTANT" : "ConstantEquivalentSolarActivity",
+            "Solar Activity Type VARIABLE" : "VariableSolarActivity",
+            "Solar Activity Type CONSTANT" : "ConstantSolarActivity",
             "Solar Activity Type" : "solActType",
             "AP Constant Equivalent Solar Activity" : "constantAP",
             "F10.7 Constant Equivalent Solar Activity" : "constantF107",

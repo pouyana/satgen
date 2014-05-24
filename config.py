@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+    #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 Sets/gets different configurations.
@@ -323,7 +323,6 @@ class Config:
             self.set_drag_area()
             return self.get_drag_area()
 
-
     def get_reflect_area(self):
         """
         Get the Reflecting area of the Cube
@@ -377,7 +376,7 @@ class Config:
         """
         Gets the orbit type.
         """
-        result =self.get_abstract_item("Space Object", "Orbit Type")
+        result = self.get_abstract_item("Space Object", "Orbit Type")
         if(result):
             return result
         else:
@@ -401,12 +400,12 @@ class Config:
     def set_drag_coef_type(self, coef="VARIABLE"):
         """
         ets the Drag Coefficient Type
-        Per default VARIABLE.
+        Per default VARIABLE the other value would be the CONSTANT
         """
         self.set_abstract_item(
             "Space Object",
             "Drag Coefficient Type",
-            coef)
+            "Drag Coefficient Type "+coef)
 
     def get_space_object_name(self):
         """
@@ -438,9 +437,9 @@ class Config:
                     self.set_abstract_item(
                         "Space Object",
                         "Drag Area",
-                        #Drag aera of random spinnig cube is
-                        #edge_length * 6/4
-                        (float(self.get_edge_length() * self.get_edge_length()) * 6/4))
+                        (float(
+                            self.get_edge_length() *
+                            self.get_edge_length()) * 6/4))
         except:
             self.log.error(
                 "The Cube Length is not set"
@@ -816,6 +815,23 @@ class Config:
         """
         self.set_abstract_item("General", "Stela Version", version)
 
+    def set_drag_coef_const(self, value):
+        """
+        Sets the value for the Constant drag coeficient
+        """
+        if(self.get_conf()["Space Object"]["Drag Coefficient Type"] ==
+           "Drag Coefficient Type CONSTANT"):
+                self.set_abstract_item(
+                    "Space Object",
+                    "Constant Drag Coef",
+                    value)
+
+    def get_drag_coef_const(self):
+        """
+        Returns the constant Drag Coefficient
+        """
+        return self.get_abstract_item("Space Object", "Constant Drag Coef")
+
     def values_to_keys(self, want_value, dictio):
         """
         Returns key from the given values, for dicts
@@ -823,74 +839,114 @@ class Config:
         for key, is_value in dictio.items():
             if (is_value == want_value):
                 return key
-    
+
+    def parse_elements(
+            self,
+            parent,
+            key_value_dict,
+            unit_dict,
+            trans_dict={},
+            exceptions=[]):
+        """
+        Parses a dict, to xml elements with the given parent
+        if a key dict exist, use it.
+        if a exception list exist, check the keys agianst exceptions
+        default just parse withut exceptions and value_list.
+        uses also config to xml trans list.
+        if they have units add the units too from unit_dict.
+        """
+        for k, v in key_value_dict.items():
+            if(k not in exceptions):
+                tmp_el = ET.SubElement(parent, trans_dict[k])
+                tmp_el.text = str(v)
+                if k in unit_dict:
+                    tmp_el.set('unit', unit_dict[k])
+
+    def parse_drag_coef(self, parent, dictio):
+        """
+        Parses the drag coeeficient variable or constant values the right way
+        addes them to the parent xml element
+        """
+        drag_co_type = self.get_conf()["Space Object"]["Drag Coefficient Type"]
+        drag_co_el = ET.SubElement(parent, dictio[drag_co_type])
+        if(drag_co_type == "Drag Coefficient Type CONSTANT"):
+            drag_co_const = ET.SubElement(
+                drag_co_el,
+                dictio["Constant Drag Coef"])
+            drag_co_const.text = str(self.get_drag_co_const())
+
+    def parse_solar_act(self, parent, unit_dict, dictio):
+        """
+        Sets the Solaractivity modes
+        """
+        solar_act_type = self.get_solar_activity_type()
+        tmp_el = ET.SubElement(
+            parent, dictio["Solar Activity Type " + solar_act_type])
+        if(solar_act_type == "VARIABLE"):
+            solar_act_type_el = ET.SubElement(
+                tmp_el, dictio["Solar Activity Type"])
+            solar_act_type_el.text = str(self.get_solar_activity_type())
+        else:
+            self.parse_elements(
+                tmp_el,
+                self.get_conf()["Solar Activity"],
+                unit_dict, dictio)
+
+    def get_xml_file_name(self):
+        name = self.get_space_object_name()
+        edge_length = self.get_edge_length()
+        mass = self.get_mass()
+        sat_name = name+"_"+str(mass)+"_"+str(edge_length)+".xml"
+        return sat_name
+
     def convet_to_xml(self):
         """
         Creates an xml configuration from the cfg file
         """
         config_dict = ConfigDict()
         dictio = config_dict.get_dict()
-
         unit_dict = config_dict.get_unit_dict()
-        #set the parent
         leosimulation = ET.Element('LEOSimulation')
         leosimulation.set("Version", self.get_stela_version())
-        #Stela Version
-        stelaversion = ET.SubElement(leosimulation, 'STELAVersion')
-        stelaversion.text = self.get_stela_version()
-        #spaceobject
         spaceobject = ET.SubElement(leosimulation, dictio["Space Object"])
-        for k, v in self.get_conf()["Space Object"].items():
-            if(k!= "Edge Length"):
-                tmp_el = ET.SubElement(spaceobject, dictio[k])
-                tmp_el.text = str(v)
-                if k in unit_dict:
-                    tmp_el.set('unit',unit_dict[k])
+        self.parse_elements(
+            spaceobject,
+            self.get_conf()["Space Object"],
+            unit_dict,
+            dictio,
+            ["Edge Length", "Drag Coefficient Type",
+                "Drag Coefficient Type CONSTANT"])
+        self.parse_drag_coef(spaceobject, dictio)
         ephemerisman = ET.SubElement(leosimulation, 'EphemerisManager')
         ephemerisman.set('Version', self.get_stela_version())
         initstate = ET.SubElement(ephemerisman, 'initState')
         bulletin = ET.SubElement(initstate, 'bulletin')
-        bulletin.set('Version',self.get_stela_version())
+        bulletin.set('Version', self.get_stela_version())
         date = strftime("%Y-%m-%dT%H:%M:%S.000", gmtime())
-        date_element = ET.SubElement(bulletin,'date')
+        date_element = ET.SubElement(bulletin, 'date')
         date_element.text = date
-        #setting the type of simulation.
-        sim_type_element = ET.SubElement(bulletin,dictio["Type "+self.get_type_of_sim()])
+        sim_type_element = ET.SubElement(
+            bulletin, dictio["Type " + self.get_type_of_sim()])
         for param in config_dict.get_conf_sim(sim_type_element.tag):
-            tm_el = ET.SubElement(sim_type_element,dictio[param])
-            tm_el.text = str(self.get_abstract_item("Initial Bulletin",param))
+            tmp_el = ET.SubElement(sim_type_element, dictio[param])
+            tmp_el.text = str(
+                self.get_abstract_item("Initial Bulletin", param))
             if param in unit_dict:
-                tm_el.set('unit',unit_dict[param])
-        finishstate = ET.SubElement(ephemerisman,'finalState')
-        #mass
-        #mass = ET.SubElement(spaceobject, dictio['Mass'])
-        #mass.set('unit', 'kg')
-        #mass.text = str(self.get_mass())
-        #drag_area
-        #dragarea = ET.SubElement(spaceobject, dictio["Drag Area"])
-        #dragarea.text = str(self.get_drag_area())
-        #reflectingarea
-        #reflectingarea = ET.SubElement(spaceobject, dictio["Reflecting Area"])
-        #reflectingarea.text = str(self.get_reflect_area())
-        #reflectingcoefficient
-        #reflectivitycoefficient = ET.SubElement(spaceobject, dictio["Reflectivity Coefficient"])
-        #reflectivitycoefficient.text = str(self.get_reflect_coef())
-        #orbittype
-        #orbittype = ET.SubElement(spaceobject, dictio["Orbit Type"])
-        #orbittype.text = self.get_orbit_type()
-        print prettify(leosimulation)
-        #tree.write('output.xml')
+                tmp_el.set('unit', unit_dict[param])
+        finishstate = ET.SubElement(ephemerisman, 'finalState')
+        self.parse_elements(
+            leosimulation,
+            self.get_conf()["General"],
+            unit_dict, dictio,
+            ["Edge Length"])
+        iteration = ET.SubElement(leosimulation, dictio["Iteration Data"])
+        self.parse_elements(
+            iteration,
+            self.get_conf()["Iteration Data"],
+            unit_dict,
+            dictio)
+        atmos = ET.SubElement(leosimulation, dictio["Atmospheric model"])
+        atmos.text = self.get_atmos_model()
+        self.parse_solar_act(leosimulation, unit_dict, dictio)
+        return prettify(leosimulation)
 
-
-conf = Config()
-conf.set_model("GTO")
-conf.set_mass(2.0)
-conf.set_perigee_alt(700000000)
-conf.set_stela_version("2.5.1")
-conf.set_edge_length(0.1)
-conf.set_orbit_type("LEO")
-conf.set_space_object_name("AAAAA")
-conf.set_type_of_sim("Perigee/Apogee")
-conf.get_edge_length()
-conf.convet_to_xml()
-print conf.get_conf()

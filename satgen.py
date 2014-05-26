@@ -76,6 +76,11 @@ def main():
         "--config",
         nargs='?',
         help="config file, read config from cfg")
+    parser.add_argument(
+        "-s",
+        "--step",
+        nargs='?',
+        help="step file for the generation of xml files")
     args = parser.parse_args()
     verbose = set_verbose_level(args.verbose, args.quiet)
     name = set_name(args.name)
@@ -84,7 +89,9 @@ def main():
         conf_parser = ConfParser(log_level=verbose)
         config_from_file = conf_parser.read_file(args.config)
         config.set_conf(config_from_file)
+        config.set_space_object_name(name)
         print config.convert_to_xml()
+        print config.get_xml_file_name()
 
 if (__name__ == "__main__"):
     main()

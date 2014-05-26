@@ -18,7 +18,7 @@ so diffrenet satellite will be creared.
 """
 from logger import Logger
 import ConfigParser
-import itertool
+import itertools
 
 
 class ConfigStep:
@@ -80,9 +80,13 @@ class ConfigStep:
     def get_combinations(self):
         """
         Returns all the possible combinations from the given dict
+        it uses product function.
         """
+        all_steps = self.do_steps()
+        return itertools.product(*(v for k,v in all_steps.items()))
+
 
 
 steps = ConfigStep()
 steps.read_conf("steps.cfg")
-print steps.do_permutation()
+print list(steps.get_combinations())

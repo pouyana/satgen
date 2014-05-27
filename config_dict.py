@@ -77,7 +77,7 @@ class ConfigDict:
             "Simulation Minus Expiring Duration" : 3,
             "Iteration Method" : 4}
 
-    def get_sort_solat_act(self):
+    def get_sort_solar_act(self):
         """
         Returns the sorting list for the solar activity
         """

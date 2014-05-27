@@ -13,7 +13,7 @@ from logger import Logger
 from config_dict import ConfigDict
 import xml.etree.ElementTree as ET
 from xml_pretty import prettify
-
+from unit_converter import UnitConverter
 
 class Config:
     def __init__(self, log_level="ERROR"):
@@ -859,15 +859,26 @@ class Config:
         unit_dict, sort_dict, transition_dict and the excpetion list.
         """
         conf_dict = ConfigDict()
+        unit_converter = UnitConverter()
         sorted_list = sorted(
             key_value_dict.items(),
             key=lambda x: sort_dict.get(x[0]))
         for sort_item in sorted_list:
             if(sort_item[0] not in exceptions and sort_item[0] != "Drag Coefficent Type"):
                 tmp_el = ET.SubElement(parent, str(trans_dict[sort_item[0]]))
-                tmp_el.text = str(sort_item[1])
                 if sort_item[0] in unit_dict:
                     tmp_el.set('unit', str(unit_dict[sort_item[0]]))
+                    #unit conversion
+                    if(unit_dict[sort_item[0]]=="rad"):
+                        tmp_el.text = str(
+                            unit_converter.deg_to_rad(float(sort_item[1])))
+                    elif(unit_dict[sort_item[0]]=="m"):
+                        tmp_el.text = str(
+                            unit_converter.km_to_m(float(sort_item[1])))
+                    else:
+                        tmp_el.text = str(sort_item[1])
+                else:
+                    tmp_el.text = str(sort_item[1])
             #exception Atmospheric Model
             if(sort_item[0] == "Atmospheric Model"):
                 atmos = ET.SubElement(parent, str(trans_dict["Atmospheric model"]))
@@ -899,7 +910,7 @@ class Config:
                         tmp_el,                                                     
                         self.get_conf()["Solar Activity"],                          
                         unit_dict,
-                        config_dict.get_sort_solat_act(),
+                        config_dict.get_sort_solar_act(),
                         trans_dict)
             #exception Iteration Data
             if(sort_item[0] == "Iteration Data"):
@@ -927,6 +938,7 @@ class Config:
         Creates an xml configuration from the cfg file
         """
         config_dict = ConfigDict()
+        unit_converter = UnitConverter()
         dictio = config_dict.get_dict()
         sort_space_object = config_dict.get_sort_space_object()
         unit_dict = config_dict.get_unit_dict()
@@ -967,10 +979,26 @@ class Config:
             bulletin, str(dictio["Type " + self.get_type_of_sim()]))
         for param in config_dict.get_conf_sim(sim_type_element.tag):
             tmp_el = ET.SubElement(sim_type_element, str(dictio[param]))
-            tmp_el.text = str(
-               self.get_abstract_item("Initial Bulletin", param.title()))
             if param in unit_dict:
                 tmp_el.set('unit', str(unit_dict[param]))
+                #unit conversion
+                if(unit_dict[param]=="rad"):
+                    tmp_el.text = str(
+                            unit_converter.deg_to_rad(
+                                float(self.get_abstract_item(
+                                    "Initial Bulletin", param.title()))))
+                elif(unit_dict[param]=="m"):
+                    tmp_el.text = str(
+                            unit_converter.km_to_m(
+                                float(self.get_abstract_item(
+                                    "Initial Bulletin", param.title()))))
+                else:
+                    tmp_el.text = str(
+                        self.get_abstract_item(
+                            "Initial Bulletin", param.title()))
+            else:
+                tmp_el.text = str(
+                    self.get_abstract_item("Initial Bulletin", param.title()))
         finishstate = ET.SubElement(ephemerisman, 'finalState')
         self.parse_elements(
              leosimulation,

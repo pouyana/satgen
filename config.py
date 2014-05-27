@@ -21,6 +21,128 @@ class Config:
         self.log = logger.get_logger()
         self.conf = {}
 
+
+    def set_value(self, value, keyword):
+        """
+        Set the value of different config options with the help
+        of the defined functions.
+        """
+        if(keyword in ["Model", "model"]):
+            self.set_model(value)
+        if(keyword in ["Mass", "mass"]):
+            self.set_mass(value)
+        if(keyword in ["Simulation duration", "Simulation Duration"]):
+            self.set_sim_dur(value)
+        if(keyword in ["Ephemeris step", "Ephemeris step"]):
+            self.set_ephemeris_step(value)
+        if(keyword in ["Difference between terrestrial and universal time", "Difference between terrestrial and universal time"]):
+            self.set_diff_terrestrial_universal_time(value)
+        if(keyword in ["a (Semi major axis)", "A (Semi Major Axis)"]):
+            self.set_semi_major_axis(value)
+        if(keyword in ["lambdaEq"]):
+            self.set_lambdaEq(value)
+        if(keyword in ["Stela Version"]):
+            self.set_stela_version(value)
+        if(keyword in ["Author"]):
+            self.set_author(self)
+        if(keyword in ["Comment"]):
+            self.set_comment(value)
+        if(keyword in ["Integration Step", "Integration step"]):
+            self.set_int_step(value)
+        if(keyword in ["Atmospheric drag switch", "Atmospheric Drag Switch"]):
+            self.set_atmos_drag_switch(value)
+        if(keyword in ["Drag quadrature Points", "Drag Quadrature Points"]):
+            self.set_quad_points(value)
+        if(keyword in ["Atmospheric Drag Recompute step", "Atmospheric Drag Recompute Step"]):
+            self.set_atmos_drag_recom_step(value)
+        if(keyword in ["Solar radiation pressure switch", "Solar Radiation Pressure Switch"]):
+            self.set_solar_rad_pres_switch(value)
+        if(keyword in ["Solar radiation pressure quadrature Points", "Solar Radiation Pressure Quadrature Points"]):
+            self.set_solar_rad_pres_quad_points(value)
+        if(keyword in ["Iterative Mode"]):
+            self.set_iter_method(value)
+        if(keyword in ["Sun switch", "Sun Switch"]):
+            self.set_sun_switch(value)
+        if(keyword in ["Moon switch", "Moon Switch"]):
+            self.set_moon_switch(value)
+        if(keyword in ["Zonal order", "Zonal Order"]):
+            self.set_zonal_order(value)
+        if(keyword in ["Earth Tesseral switch", "Earth Tesseral Switch"]):
+            self.set_earth_tesseral_switch(value)
+        if(keyword in ["Tesseral min period", "Tesseral Min Period"]):
+            self.set_tesseral_min_period(value)
+        if(keyword in ["Reentry Altitude", "Reentry altitude"]):
+            self.set_reentry_alt(value)
+        if(keyword in ["Drag Area","Drag area"]):
+            self.set_drag_area(value)
+        if(keyword in ["Reflecting Area", "Reflecting area"]):
+            self.set_reflect_area(value)
+        if(keyword in ["Reflectivity Coefficient", "Reflectivity coefficient"]):
+            self.set_reflect_coef(value)
+        if(keyword in ["Orbit Type", "Orbit type"]):
+            self.set_orbit_type(value)
+        if(keyword in ["Name"]):
+            self.set_space_object_name(value)
+        if(keyword in ["Date", "Initial Date"]):
+            self.set_initial_date(value)
+        if(keyword in ["Zp (Perigee altitude)", "Zp (Perigee Altitude)", "Zp (Perigee)"]):
+            self.set_perigee_alt(value)
+        if(keyword in ["Za (Apogee altitude)", "Za (Apogee Altitude)", "Za (Apogee)"]):
+            self.set_perigee_alt(value)
+        if(keyword in ["I (Inclination)"]):
+            self.set_incl(value)
+        if(keyword in ["RAAN (Right Ascension of Ascending Node)", "RAAN (Right ascension of ascending Node)"]):
+            self.set_raan(value)
+        if(keyword in ["W (Argument Of Perigee)", "w (Argument Of Perigee)"]):
+            self.set_arg_perigee(value)
+        if(keyword in ["M (Mean Anomaly)", "M (Mean anomaly)"]):
+            self.set_mean_anomaly(value)
+        if(keyword in ["E (Eccentricity)", "e (Eccentricity)"]):
+            self.set_eccentricity(value)
+        if(keyword in ["Atmospheric model", "Atmospheric Model"]):
+            self.set_atoms_model(value)
+        if(keyword in ["longitudeTFE"]):
+            self.set_longitudeTFE(value)
+        if(keyword in ["epochTFE"]):
+            self.set_epochTFE(value)
+        if(keyword in ["eX"]):
+            self.set_eX(value)
+        if(keyword in ["eY"]):
+            self.set_eY(value)
+        if(keyword in ["iX"]):
+            self.set_iX(value)
+        if(keyword in ["iY"]):
+            self.set_iY(value)
+        if(keyword in ["x"]):
+            self.set_x(value)
+        if(keyword in ["y"]):
+            self.set_y(value)
+        if(keyword in ["z"]):
+            self.set_z(value)
+        if(keyword in ["vX"]):
+            self.set_vX(value)
+        if(keyword in ["vY"]):
+            self.set_vY(value)
+        if(keyword in ["vZ"]):
+            self.set_vZ(value)
+        if(keyword in ["Solar Activity Type"]):
+            self.set_solar_activity_type(value)
+        if(keyword in ["AP Constant Equivalent Solar Activity"]):
+            self.set_ap_constant_solar_act(value)
+        if(keyword in ["F10.7 Constant Equivalent Solar Activity"]):
+            self.set_f107(value)
+        if(keyword in ["Function Value Accuracy"]):
+            self.set_func_value_accu(value)
+        if(keyword in ["Simulation Minus Expiring Duration"]):
+            self.set_sim_minus_exp(value)
+        if(keyword in ["Iteration Method"]):
+            self.set_iter_method(value)
+        if(keyword in ["Expiring Duration"]):
+            self.set_exp_dur(value)
+        if(keyword in ["Iterative Mode"]):
+            self.set_iter_mode(value)
+            
+
     def set_abstract_item(self, section, option, value):
         """
         Adds items to the config array
@@ -63,6 +185,42 @@ class Config:
             self.log.error("Key General not existant.")
             return None
 
+    def set_longitudeTFE(self, longi):
+        """
+        Sets the longitudeTFE in km
+        """
+        self.set_abstract_item("Initial Bulletin", "longitudeTFE", longi)
+
+    def get_longitudeTFE(self):
+        """
+        Gets the longitudeTFE
+        """
+        self.get_abstract_item("Initial Bulletin", "longitudeTFE")
+
+    def set_epochTFE(self, epoch):
+        """
+        Sets the Epoch, which is same as date here
+        """
+        self.set_abstract_item("Initial Bulletin", "epochTFE", epoch)
+
+    def get_epochTFE(self):
+        """
+        Gets the Epoch
+        """
+        self.set_abstract_item("Initial Bulletin", "epochTFE")
+
+    def get_tesseral_min_period(self):
+        """
+        Gets the Tesseral Min Period
+        """
+        return self.get_abstract_item("General", "Tesseral min period")
+
+    def set_tesseral_min_period(self, period):
+        """
+        Sets the Tesseral Min Period
+        """
+        self.set_abstract_item("General", "Tesseral min period")
+
     def set_model(self, model):
         """
         Set Model in General
@@ -81,7 +239,7 @@ class Config:
         """
         return self.get_abstract_item("General", "Author")
 
-    def set_autor(self, author):
+    def set_author(self, author):
         """
         Set the autor of config
         """
@@ -105,7 +263,7 @@ class Config:
         """
         return self.get_abstract_item("General", "Simulation duration")
 
-    def get_sim_dur(self, dur):
+    def set_sim_dur(self, dur):
         """
         Set the Simulation durition in years.
         """
@@ -673,6 +831,18 @@ class Config:
         """
         return self.get_abstract_item("Initial Bulletin", "a (Semi major axis)".title())
 
+    def get_eccentricity(self):
+        """
+        Gets the Eccentricity
+        """
+        return self.get_abstract_item("Initial Bulletin", "e (Eccentricity)")
+
+    def set_eccentricity(self, ecc):
+        """
+        Sets the Eccentricity
+        """
+        self.set_abstract_item("Initial Bulletin", "e (Eccentricity)", ecc)
+
     def set_eX(self, eX):
         """
         Sets the eX Orbital Parameter
@@ -720,6 +890,18 @@ class Config:
         Gets the Orbital Parameter iY
         """
         return self.get_abstract_item("Initial Bulletin", "iY")
+
+    def set_x(self, x):
+        """
+        Sets the x value
+        """
+        self.set_abstract_item("Initial Bulletin", "x", x)
+
+    def get_x(self):
+        """
+        Gets the x value
+        """
+        self.get_abstract_item("Initial Bulletin", "x")
 
     def set_lambdaEq(self, lambdaEq):
         """

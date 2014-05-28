@@ -27,6 +27,8 @@ class Config:
         Set the value of different config options with the help
         of the defined functions.
         """
+        if(keyword in ["Edge Length", "Edge length"]):
+            self.set_edge_length(value)
         if(keyword in ["Model", "model"]):
             self.set_model(value)
         if(keyword in ["Mass", "mass"]):
@@ -823,7 +825,7 @@ class Config:
         """
         Sets the SemiMajor Axis in km
         """
-        self.set_abstract_item("Initial Bulletin", "a (Semi major axis)", axis)
+        self.set_abstract_item("Initial Bulletin", "a (Semi major axis)".title(), axis)
 
     def get_semi_major_axis(self):
         """
@@ -1112,7 +1114,7 @@ class Config:
         name = self.get_space_object_name()
         edge_length = self.get_edge_length()
         mass = self.get_mass()
-        sat_name = name+"_"+str(mass)+"_"+str(edge_length)+".xml"
+        sat_name = name+"_"+str(mass)+"_"+str(edge_length)+"_sim.xml"
         return sat_name
 
     def convert_to_xml(self):

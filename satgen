@@ -52,6 +52,20 @@ def set_options(conf, combination, options):
     """
     Set the options with the different combinations
     """
+    count = 0
+    for combi in combination:
+        conf.set_value(combi, options[count])
+        count = count + 1
+def get_output_dir(direct="default"):
+    """
+    Gets the output directory
+    """
+    result = ""
+    if(direct=="default"):
+        result = ""
+    else:
+        result = direct
+    return result
 
 def main():
     """
@@ -93,26 +107,26 @@ def main():
         help="output folder")
     args = parser.parse_args()
     verbose = set_verbose_level(args.verbose, args.quiet)
-    name = set_name(args.name)
     config = Config(log_level=verbose)
     if(args.step):
         steps = ConfigStep()
-        steps.read_file(args.step)
+        steps.read_conf(args.step)
         options = steps.get_options()
         combinations = steps.get_combinations()
     if(args.config):
         conf_parser = ConfParser(log_level=verbose)
         config_from_file = conf_parser.read_file(args.config)
         config.set_conf(config_from_file)
-        config.set_space_object_name(name)
         config.set_edge_length(0.1)
-    if(combinations and options):
+    if(args.step and combinations and options):
         for combination in combinations:
-            
-
-        print config.convert_to_xml()
-        print config.get_xml_file_name()
-    else:
+            name = set_name(args.name)
+            config.set_space_object_name(name)
+            set_options(config, combination, options)
+            directory = get_output_dir(args.outputfolder)
+            fh=open(directory+"/"+config.get_xml_file_name(),"w+")
+            fh.write(config.convert_to_xml())
+            fh.close
 
 if (__name__ == "__main__"):
     main()

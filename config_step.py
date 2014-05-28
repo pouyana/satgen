@@ -89,7 +89,7 @@ class ConfigStep:
         all_steps = self.get_step_conf()
         return list(k for k in all_steps)
 
-steps = ConfigStep()
-steps.read_conf("steps.cfg")
-print list(steps.get_combinations())
-print steps.get_options()
+#steps = ConfigStep()
+#steps.read_conf("steps.cfg")
+#print list(steps.get_combinations())
+#print steps.get_options()

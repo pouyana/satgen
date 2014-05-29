@@ -230,11 +230,11 @@ class ConfigDict:
         """
         result = []
         if(type_of_sim=="Type0PosVel"):
-            result = ["Zp (Perigee altitude)", "Za (Apogee altitude)", "I (Inclination)", "RAAN (Right Ascension of Ascending Node)", "w (Argument of perigee)", "M (Mean anomaly)"]
+            result = ["Frame", "Nature", "Zp (Perigee altitude)", "Za (Apogee altitude)", "I (Inclination)", "RAAN (Right Ascension of Ascending Node)", "w (Argument of perigee)", "M (Mean anomaly)"]
         if(type_of_sim=="Type8PosVel"):
-            result = ["longitudeTFE", "epochTFE", "a (Semi major axis)", "lambdaEq", "eX", "eY", "iX", "iY"]
+            result = ["Frame", "Nature", "a (Semi major axis)", "lambdaEq", "eX", "eY", "iX", "iY"]
         if(type_of_sim=="Type2PosVel"):
             result = ["Frame", "Nature", "a (Semi major axis)" ,"e (Eccentricity)", "I (Inclination)", "RAAN (Right Ascension of Ascending Node)", "w (Argument of perigee)","M (Mean anomaly)"]
         if(type_of_sim=="Type1PosVel"):
-            result = ["longitudeTFE", "epochTFE", "x", "y", "z", "vX", "vY", "vZ"]
+            result = ["Frame", "Nature", "x", "y", "z", "vX", "vY", "vZ"]
         return result

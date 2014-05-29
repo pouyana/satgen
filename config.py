@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Sets/gets different configurations.
-If a configuration parameter not given to
-the satgen it uses the values in the file.
-Satgen can not accept all the parameters
-from the command line so please create a configuration file.
+Read/Set/Get/Convert configurations here.
+Most of the setting is done here. Xml files are also created here.
+Simulation files also get a database replication. it is easier then
+to manage the results.
+The results are managed by another module
+mainly the simulator.
 """
 
 from time import gmtime, strftime
@@ -14,12 +15,23 @@ from config_dict import ConfigDict
 import xml.etree.ElementTree as ET
 from xml_pretty import prettify
 from unit_converter import UnitConverter
+from database import DB
 
 class Config:
     def __init__(self, log_level="ERROR"):
+        #logger
         logger = Logger(log_level)
         self.log = logger.get_logger()
+        #empty conf
         self.conf = {}
+        #database
+        self.db = DB("satgen.db")
+        self.db.create_all_tables()
+        self.db_id = 0
+        #unit library
+        self.unit_lib = UnitConverter()
+        #configuration dictionary
+        self.config_dict = ConfigDict()
 
 
     def set_value(self, value, keyword):
@@ -475,6 +487,7 @@ class Config:
         Set the length of a the Cube Edge in m
         """
         self.set_abstract_item("Space Object", "Edge Length", length)
+        self.db.update_value("spaceObject", "edgeLength", self.get_db_id(), length)
         self.set_drag_area()
         self.set_reflect_area()
 
@@ -581,9 +594,24 @@ class Config:
 
     def set_space_object_name(self, name):
         """
-        Sets the space object name
+        Sets the space object name it should be called in
+        satgen so the object get inserted to the table.
         """
         self.set_abstract_item("Space Object", "Name", name)
+        self.db_id = self.db.insert_space_object(name)
+
+
+    def get_db_id(self):
+        """
+        Returns the database id if not exisit 0
+        """
+        return self.db_id
+
+    def set_db_id(self,db_id):
+        """
+        Sets the database id of the configuration
+        """
+        self.db_id = db_id
 
     def set_drag_area(self, mode="random"):
         """
@@ -1042,8 +1070,9 @@ class Config:
         Parses the keys and values dict with help of 
         unit_dict, sort_dict, transition_dict and the excpetion list.
         """
-        conf_dict = ConfigDict()
-        unit_converter = UnitConverter()
+        db_id = self.get_db_id()
+        conf_dict = self.config_dict
+        unit_converter = self.unit_lib
         sorted_list = sorted(
             key_value_dict.items(),
             key=lambda x: sort_dict.get(x[0]))
@@ -1106,7 +1135,6 @@ class Config:
                     conf_dict.get_sort_iteration_data(),
                     trans_dict)
 
-
     def get_xml_file_name(self):
         """
         Get the xml_file name generated
@@ -1121,11 +1149,10 @@ class Config:
         """
         Creates an xml configuration from the cfg file
         """
-        config_dict = ConfigDict()
         unit_converter = UnitConverter()
-        dictio = config_dict.get_dict()
-        sort_space_object = config_dict.get_sort_space_object()
-        unit_dict = config_dict.get_unit_dict()
+        dictio = self.config_dict.get_dict()
+        sort_space_object = self.config_dict.get_sort_space_object()
+        unit_dict = self.config_dict.get_unit_dict()
         self.set_abstract_item(
             "General",
             "Solar Activity Type",
@@ -1159,13 +1186,14 @@ class Config:
         date = strftime("%Y-%m-%dT%H:%M:%S.000", gmtime())
         date_element = ET.SubElement(bulletin, 'date')
         date_element.text = date
-        sim_type_element = ET.SubElement(
-            bulletin, str(dictio["Type " + self.get_type_of_sim()]))
-        for param in config_dict.get_conf_sim(sim_type_element.tag):
+        bulletin_type = str(dictio["Type " + self.get_type_of_sim()])
+        sim_type_element = ET.SubElement( bulletin, bulletin_type)
+        #set the type of simulation in initialstate db
+        self.db.insert_init_state(bulletin_type, self.get_db_id())
+        for param in self.config_dict.get_conf_sim(sim_type_element.tag):
             tmp_el = ET.SubElement(sim_type_element, str(dictio[param]))
             if param in unit_dict:
                 tmp_el.set('unit', str(unit_dict[param]))
-                #unit conversion
                 if(unit_dict[param]=="rad"):
                     tmp_el.text = str(
                             unit_converter.deg_to_rad(
@@ -1188,7 +1216,7 @@ class Config:
              leosimulation,
              self.get_conf()["General"],
              unit_dict,
-             config_dict.get_sort_general(),
+             self.config_dict.get_sort_general(),
              dictio,
             [
             "Stela Version",

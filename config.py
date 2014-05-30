@@ -1189,9 +1189,11 @@ class Config:
         bulletin_type = str(dictio["Type " + self.get_type_of_sim()])
         sim_type_element = ET.SubElement( bulletin, bulletin_type)
         #set the type of simulation in initialstate db
-        self.db.insert_init_state(bulletin_type, self.get_db_id())
+        init_id = self.db.insert_init_state(bulletin_type, self.get_db_id())
+        self.db.update_value("spaceObject","initId", self.get_db_id(), init_id)
         for param in self.config_dict.get_conf_sim(sim_type_element.tag):
             tmp_el = ET.SubElement(sim_type_element, str(dictio[param]))
+            self.db.update_value("initState", dictio[param], init_id, self.get_abstract_item("Initial Bulletin", param.title()))
             if param in unit_dict:
                 tmp_el.set('unit', str(unit_dict[param]))
                 if(unit_dict[param]=="rad"):

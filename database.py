@@ -170,7 +170,10 @@ class DB:
     def insert_init_state(self, init_type, space_object_id):
         conn = self.get_conn()
         c = self.get_cur()
-        c.execute('INSERT INTO initState({}, spaceObjectId) values(?, ?)'.format(init_type), (1, space_object_id))
+        c.execute(
+            '''INSERT INTO initState({},
+            spaceObjectId) values(?, ?)'''.format(init_type),
+            (1, space_object_id))
         conn.commit()
         return c.lastrowid
 

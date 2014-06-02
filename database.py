@@ -168,12 +168,38 @@ class DB:
         return c.lastrowid
 
     def insert_init_state(self, init_type, space_object_id):
+        """
+        Insert initial points in the table
+        """
         conn = self.get_conn()
         c = self.get_cur()
         c.execute(
             '''INSERT INTO initState({},
             spaceObjectId) values(?, ?)'''.format(init_type),
             (1, space_object_id))
+        conn.commit()
+        return c.lastrowid
+
+    def insert_sim_general(self, space_object_id):
+        """
+        Insert the Sim general settings in the table
+        """
+        conn = self.get_conn()
+        c = self.get_cur()
+        c.execute(
+            '''INSERT INTO simGeneral(spaceObjectId) values(?)''', (space_object_id, ))
+        conn.commit()
+        return c.lastrowid
+
+    def insert_iteration_data(self, space_object_id):
+        """
+        Insert the iteration data of the simulation
+        in table
+        """
+        conn = self.get_conn()
+        c = self.get_cur()
+        c.execute(
+            '''INSERT INTO iterationData(spaceObjectId) values(?)''', (space_object_id, ))
         conn.commit()
         return c.lastrowid
 
@@ -186,7 +212,6 @@ class DB:
             '''UPDATE {} SET
             {}=? WHERE id=?'''.format(table, column), (value, rowid))
         conn = self.get_conn()
-
         conn.commit()
 
 #db = DB("sat.sql")

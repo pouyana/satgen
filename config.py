@@ -1079,6 +1079,7 @@ class Config:
         for sort_item in sorted_list:
             if(sort_item[0] not in exceptions and sort_item[0] != "Drag Coefficent Type"):
                 tmp_el = ET.SubElement(parent, str(trans_dict[sort_item[0]]))
+                self.db.update_value(trans_dict[parent.tag], trans_dict[sort_item[0]], self.get_db_id(), sort_item[1])
                 if sort_item[0] in unit_dict:
                     tmp_el.set('unit', str(unit_dict[sort_item[0]]))
                     #unit conversion
@@ -1095,6 +1096,7 @@ class Config:
             #exception Atmospheric Model
             if(sort_item[0] == "Atmospheric Model"):
                 atmos = ET.SubElement(parent, str(trans_dict["Atmospheric model"]))
+                self.db.update_value(trans_dict[parent.tag], trans_dict[sort_item[0]], self.get_db_id(), sort_item[1])
                 atmos.text = self.get_atmos_model()
 
             #exception Drag Coefficient
@@ -1170,6 +1172,7 @@ class Config:
         leosimulation.set("version", str(self.get_stela_version()))
         stelaversion = ET.SubElement(leosimulation, 'STELAVersion')
         stelaversion.text = "2.5.1"
+        sim_general_id = self.db.insert_sim_general(self.get_db_id())
         spaceobject = ET.SubElement(leosimulation, dictio["Space Object"])
         self.parse_elements(
             spaceobject,

@@ -180,6 +180,19 @@ class DB:
         conn.commit()
         return c.lastrowid
 
+    def insert_final_state(self, final_type, space_object_id):
+                """
+                Insert initial points in the table
+                """
+                conn = self.get_conn()
+                c = self.get_cur()
+                c.execute(
+                    '''INSERT INTO finalState({},
+                    spaceObjectId) values(?, ?)'''.format(final_type),
+                    (1, space_object_id))
+                conn.commit()
+                return c.lastrowid
+    
     def insert_sim_general(self, space_object_id):
         """
         Insert the Sim general settings in the table

@@ -9,6 +9,7 @@ The results are managed by another module
 mainly the simulator.
 """
 
+import sys
 from time import gmtime, strftime
 from logger import Logger
 from config_dict import ConfigDict
@@ -16,6 +17,7 @@ import xml.etree.ElementTree as ET
 from xml_pretty import prettify
 from unit_converter import UnitConverter
 from database import DB
+
 
 class Config:
     def __init__(self, db, log_level="ERROR"):
@@ -1234,4 +1236,10 @@ class Config:
             "Atmospheric Model" ,
             "Earth Tesseral Switch",
             "Iteration Data"])
-        return prettify(leosimulation)
+        result = ""
+        if(sys.version_info) > (2,7):
+            result = prettify(leosimulation)
+        else:
+            result = ET.tostring(leosimulation)
+        return result
+

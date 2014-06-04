@@ -83,11 +83,12 @@ class ConfigStep:
         it uses product function.
         """
         all_steps = self.do_steps()
+        self.option = [k for k,v in all_steps.items()]
         return itertools.product(*(v for k,v in all_steps.items()))
 
     def get_options(self):
         all_steps = self.get_step_conf()
-        return list(k for k in all_steps)
+        return self.option
 
 #steps = ConfigStep()
 #steps.read_conf("steps.cfg")

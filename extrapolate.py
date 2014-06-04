@@ -108,7 +108,7 @@ class Extrapolate():
                 object_id=db.get_sat_id_by_name(self.get_name(f))
                 os.chdir(self.get_root())
                 option=" -i " + os.path.abspath(f) + " -o " + os.path.abspath(f)+"_out"         
-                os.chdir("/home/poa32kc/Programs/Stela/bin")                    
+                os.chdir("/home/pouyan/Work/Stela/bin")                    
                 command_line = "./stela-batch.sh"+option
                 args = shlex.split(command_line)
                 CR = subprocess.call(args)
@@ -119,5 +119,5 @@ class Extrapolate():
                 self.db.update_value("finalState", "date", final_id, self.getFinalDate(os.path.abspath(f)+"_out_sim.xml"))
 
 ex=Extrapolate()
-ex.set_root("/home/poa32kc/Programs/Python/satgen/sim/")
+ex.set_root("/home/pouyan/Work/Python/satgen/sim/")
 ex.extrapolate()

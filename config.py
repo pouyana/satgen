@@ -1107,11 +1107,11 @@ class Config:
                 drag_co_el = ET.SubElement(
                     parent,
                     str(trans_dict["Drag Coefficent Type " + drag_co_type]))
-                if(drag_co_type == "Drag Coefficent Type CONSTANT"):
+                if(drag_co_type == "CONSTANT"):
                     drag_co_const = ET.SubElement(
                         drag_co_el,
                         str(trans_dict["Constant Drag Coef"]))
-                    drag_co_const.text = str(self.get_drag_co_const())
+                    drag_co_const.text = str(self.get_drag_coef_const())
             #exception Solar Activity
             if(sort_item[0] == "Solar Activity Type"):
                 solar_act_type = self.get_solar_activity_type()

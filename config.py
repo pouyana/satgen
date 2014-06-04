@@ -18,14 +18,14 @@ from unit_converter import UnitConverter
 from database import DB
 
 class Config:
-    def __init__(self, log_level="ERROR"):
+    def __init__(self, db, log_level="ERROR"):
         #logger
         logger = Logger(log_level)
         self.log = logger.get_logger()
         #empty conf
         self.conf = {}
         #database
-        self.db = DB("satgen.db")
+        self.db = db
         self.db.create_all_tables()
         self.db_id = 0
         #unit library
@@ -703,7 +703,7 @@ class Config:
             "F10.7 Constant Equivalent Solar Activity",
             f107)
 
-    def get_intial_date(self):
+    def get_initial_date(self):
         """
         Gets the initail date of the simulation
         """
@@ -714,6 +714,8 @@ class Config:
         Sets the date, the date can be dot or - splitted yyyy-mm-dd
         internally it will be changed to yyyy-mm-ddT12:00:00:00.000
         """
+        return self.set_abstract_item("Initial Bulletin", "Date", date)
+
 
     def get_type_of_sim(self):
         """
@@ -1144,7 +1146,7 @@ class Config:
         name = self.get_space_object_name()
         edge_length = self.get_edge_length()
         mass = self.get_mass()
-        sat_name = name+"_"+str(mass)+"_"+str(edge_length)+"_sim.xml"
+        sat_name = name+"_a_sim.xml"
         return sat_name
 
     def convert_to_xml(self):
@@ -1187,6 +1189,7 @@ class Config:
         bulletin = ET.SubElement(initstate, 'bulletin')
         bulletin.set('version', str(self.get_stela_version()))
         date = strftime("%Y-%m-%dT%H:%M:%S.000", gmtime())
+        self.set_initial_date(date)
         date_element = ET.SubElement(bulletin, 'date')
         date_element.text = date
         bulletin_type = str(dictio["Type " + self.get_type_of_sim()])
@@ -1194,6 +1197,7 @@ class Config:
         #set the type of simulation in initialstate db
         init_id = self.db.insert_init_state(bulletin_type, self.get_db_id())
         self.db.update_value("spaceObject","initId", self.get_db_id(), init_id)
+        self.db.update_value("initState","date",init_id, self.get_initial_date())
         for param in self.config_dict.get_conf_sim(sim_type_element.tag):
             tmp_el = ET.SubElement(sim_type_element, str(dictio[param]))
             self.db.update_value("initState", dictio[param], init_id, self.get_abstract_item("Initial Bulletin", param.title()))

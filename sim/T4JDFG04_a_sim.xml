@@ -3,21 +3,21 @@
   <STELAVersion>2.5.1</STELAVersion>
   <SpaceObject>
     <mass unit="kg">1.0</mass>
-    <dragArea>0.735</dragArea>
-    <reflectingArea>2.94</reflectingArea>
+    <dragArea>0.015</dragArea>
+    <reflectingArea>0.06</reflectingArea>
     <reflectivityCoefficient>1.5</reflectivityCoefficient>
     <orbitType>LEO</orbitType>
     <VariableDragCoef/>
-    <name>C8T6Z9M0</name>
+    <name>T4JDFG04</name>
   </SpaceObject>
   <EphemerisManager version="2.5.0">
     <initState>
       <bulletin version="2.5.0">
-        <date>2014-06-02T09:18:08.000</date>
+        <date>2014-06-04T15:51:28.000</date>
         <Type2PosVel>
           <frame>CELESTIAL_MEAN_OF_DATE</frame>
           <nature>MEAN</nature>
-          <semiMajorAxis unit="m">8000000.0</semiMajorAxis>
+          <semiMajorAxis unit="m">7000000.0</semiMajorAxis>
           <eccentricity>0.0159292035</eccentricity>
           <inclination unit="rad">1.72072010954</inclination>
           <rAAN unit="rad">4.84352097761</rAAN>

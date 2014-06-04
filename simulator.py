@@ -9,19 +9,20 @@ import sys,os
 import tempfile
 import platform
 import datetime
-from database import DB
+import shutil
+from time import sleep
 from config_dict import ConfigDict
 
 class Simulate:
-    def __init__(self, stela_root, input_file, sim_out, space_object_id):
+    def __init__(self, stela_root, input_file, sim_out, space_object_id, db):
         self.root = stela_root
         self.input_file = input_file
         self.output_folder = sim_out
         self.db_id = space_object_id
         self.config_dict = ConfigDict()
-        self.db = DB("satgen.db")
-        self.temp_file = self.output_folder + os.path.basename(input_file) + "_tmp_sim.xml"
-        self.work_file = self.output_folder + os.path.basename(input_file) + "_work_sim.xml"
+        self.db = db
+        self.temp_file = self.input_file + "stela_tmp_sim.xml"
+        self.work_file = tempfile.NamedTemporaryFile().name + "stela_work_sim.xml"
         self.DEBUG_MODE = True
     
     def debug(self, mess):
@@ -65,6 +66,13 @@ class Simulate:
         """
         Update final state values in database
         """
+        import xml.etree.ElementTree as ET
+        tree = ET.parse(self.temp_file)
+        root = tree.getroot()
+        finalstate = root.findall(".//finalState/bulletin/"+self.getFinalType())
+        for fls in finalstate[0].iter():
+            if (fls.tag!=self.getFinalType()):
+                self.db.update_value("finalState", fls.tag, final_id, fls.text)
 
 
     def copy(self, src, dest):
@@ -136,26 +144,22 @@ class Simulate:
         """
         Extrapolate with Stela
         """
-        import subprocess
+        import subprocess, shlex
         prog=self.choseprog()
-        option=" -i " + self.work_file + " -o " + self.temp_file
-        os.chdir(os.path.dirname(os.path.normpath(prog)))
+        option=" -i " + self.input_file + " -o " + self.temp_file
+        os.chdir("/home/poa32kc/Programs/Stela/bin")
+        command_line = "./stela-batch.sh"+option
+        args = shlex.split(command_line)
         platf=platform.system()
+        CR = 1
         if platf == 'Linux':
-            CR=os.system("./" + os.path.basename(prog) + option  )
+            while(CR!=0):
+                print args
+                CR = subprocess.call(args)
+                print CR
         elif platf == 'Windows':
-            CR=os.system( os.path.basename(prog) + option)
-        else:
-            end(105, "unknown OS")
-        if CR != 0:
-            self.end(CR, "Error when launching extrapolation")
-        if not os.path.isfile(self.temp_file):
-            self.end(110, "Error when write output file during launching extrapolation")
+            CR = os.system( os.path.basename(prog) + option)
         final_type = self.getFinalType()
-        final_id = self.db.insert_final_state(final_type,29)
-        if not os.path.isfile(self.work_file):
-            end(120, "Error when move temporary file in working file")
-
-simulator=Simulate("/home/poa32kc/Programs/Stela", "sim/BNGNIAL0_2.0_0.4_sim.xml","/home/poa32kc/Programs/Python/satgen/sim/", 1)
-simulator.copy(simulator.input_file, simulator.work_file)
-simulator.extrapolate()
+        final_id = self.db.insert_final_state(final_type,self.db_id)
+        self.update_final_state(final_id)
+        self.db.update_value("finalState", "date", final_id, self.getFinalDate())

@@ -2,18 +2,18 @@
 <LEOSimulation version="2.5.0">
 	<STELAVersion>2.5.1</STELAVersion>
 	<SpaceObject>
-		<mass unit="kg">2.0</mass>
-		<dragArea>0.24</dragArea>
-		<reflectingArea>0.96</reflectingArea>
+		<mass unit="kg">1.0</mass>
+		<dragArea>0.54</dragArea>
+		<reflectingArea>2.16</reflectingArea>
 		<reflectivityCoefficient>1.5</reflectivityCoefficient>
 		<orbitType>LEO</orbitType>
 		<VariableDragCoef/>
-		<name>BNGNIAL0</name>
+		<name>DAMBNM5N</name>
 	</SpaceObject>
 	<EphemerisManager version="2.5.0">
 		<initState>
 			<bulletin version="2.5.0">
-				<date>2014-06-02T09:19:14.000</date>
+				<date>2014-06-04T15:51:33.000</date>
 				<Type2PosVel>
 					<frame>CELESTIAL_MEAN_OF_DATE</frame>
 					<nature>MEAN</nature>
@@ -28,16 +28,16 @@
 		</initState>
 		<finalState>
 			<bulletin version="2.5.0">
-				<date>2015-09-27T01:00:02.870</date>
+				<date>2014-09-09T02:37:55.231</date>
 				<Type2PosVel>
 					<frame>CELESTIAL_MEAN_OF_DATE</frame>
 					<nature>MEAN</nature>
-					<semiMajorAxis unit="m">6509591.701536762</semiMajorAxis>
-					<eccentricity>3.4561078369867854E-4</eccentricity>
-					<inclination unit="rad">1.7180850152499614</inclination>
-					<rAAN unit="rad">1.6242623628340764</rAAN>
-					<argOfPerigee unit="rad">1.026442194148446</argOfPerigee>
-					<meanAnomaly unit="rad">1.952408742662552</meanAnomaly>
+					<semiMajorAxis unit="m">6496996.157503347</semiMajorAxis>
+					<eccentricity>7.821181594051734E-4</eccentricity>
+					<inclination unit="rad">1.7174882947095027</inclination>
+					<rAAN unit="rad">0.41580753417137295</rAAN>
+					<argOfPerigee unit="rad">6.047990815307719</argOfPerigee>
+					<meanAnomaly unit="rad">1.134304152648447</meanAnomaly>
 				</Type2PosVel>
 			</bulletin>
 		</finalState>
@@ -50,15 +50,15 @@
 	<srpSwitch>true</srpSwitch>
 	<sunSwitch>true</sunSwitch>
 	<moonSwitch>true</moonSwitch>
-	<extrapolationDuration>2677</extrapolationDuration>
+	<extrapolationDuration>1036</extrapolationDuration>
 	<warningFlag>false</warningFlag>
 	<iterativeMode>false</iterativeMode>
 	<GTOIntegrator>
 		<Integrator>
-			<effective_duration unit="years">1.3193794480568841</effective_duration>
+			<effective_duration unit="years">0.2640626103062306</effective_duration>
 			<LOSCriteria1 version="2.5.0">
 				<status_criteria1>1</status_criteria1>
-				<comment_criteria1>Lifetime :1.32 years</comment_criteria1>
+				<comment_criteria1>Lifetime :0.26 years</comment_criteria1>
 			</LOSCriteria1>
 			<LOSCriteria2 version="2.5.0">
 				<status_criteria2>3</status_criteria2>

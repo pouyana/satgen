@@ -154,7 +154,7 @@ class DB:
         self.create_sim_general_table()
         self.create_iteration_data_table()
         self.create_state_tables("initState")
-        self.create_state_tables("FinalState")
+        self.create_state_tables("finalState")
 
     def insert_space_object(self, name):
         """

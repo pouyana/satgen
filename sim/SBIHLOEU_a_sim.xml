@@ -3,21 +3,21 @@
   <STELAVersion>2.5.1</STELAVersion>
   <SpaceObject>
     <mass unit="kg">1.0</mass>
-    <dragArea>0.96</dragArea>
-    <reflectingArea>3.84</reflectingArea>
+    <dragArea>1.815</dragArea>
+    <reflectingArea>7.26</reflectingArea>
     <reflectivityCoefficient>1.5</reflectivityCoefficient>
     <orbitType>LEO</orbitType>
     <VariableDragCoef/>
-    <name>KW7GDW32</name>
+    <name>SBIHLOEU</name>
   </SpaceObject>
   <EphemerisManager version="2.5.0">
     <initState>
       <bulletin version="2.5.0">
-        <date>2014-06-02T09:18:17.000</date>
+        <date>2014-06-04T15:51:37.000</date>
         <Type2PosVel>
           <frame>CELESTIAL_MEAN_OF_DATE</frame>
           <nature>MEAN</nature>
-          <semiMajorAxis unit="m">8000000.0</semiMajorAxis>
+          <semiMajorAxis unit="m">7000000.0</semiMajorAxis>
           <eccentricity>0.0159292035</eccentricity>
           <inclination unit="rad">1.72072010954</inclination>
           <rAAN unit="rad">4.84352097761</rAAN>

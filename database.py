@@ -46,7 +46,7 @@ class DB:
         table type would be initState, and finalState
         """
         c = self.get_cur()
-        c.execute('''CREATE TABLE IF NOT EXISTS {}
+        c.execute('''CREATE TABLE IF NOT EXISTS {0}
                 (id integer primary key,
                 date text,
                 Type2PosVel integer,
@@ -185,7 +185,7 @@ class DB:
         conn = self.get_conn()
         c = self.get_cur()
         c.execute(
-            '''INSERT INTO initState({},
+            '''INSERT INTO initState({0},
             spaceObjectId) values(?, ?)'''.format(init_type),
             (1, space_object_id))
         conn.commit()
@@ -198,7 +198,7 @@ class DB:
                 conn = self.get_conn()
                 c = self.get_cur()
                 c.execute(
-                    '''INSERT INTO finalState({},
+                    '''INSERT INTO finalState({0},
                     spaceObjectId) values(?, ?)'''.format(final_type),
                     (1, space_object_id))
                 conn.commit()
@@ -233,8 +233,8 @@ class DB:
         """
         c = self.get_cur()
         c.execute(
-            '''UPDATE {} SET
-            {}=? WHERE id=?'''.format(table, column), (value, rowid))
+            '''UPDATE {0} SET
+            {1}=? WHERE id=?'''.format(table, column), (value, rowid))
         conn = self.get_conn()
         conn.commit()
 

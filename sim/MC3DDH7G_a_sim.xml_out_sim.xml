@@ -8,12 +8,12 @@
 		<reflectivityCoefficient>1.5</reflectivityCoefficient>
 		<orbitType>LEO</orbitType>
 		<VariableDragCoef/>
-		<name>DAMBNM5N</name>
+		<name>MC3DDH7G</name>
 	</SpaceObject>
 	<EphemerisManager version="2.5.0">
 		<initState>
 			<bulletin version="2.5.0">
-				<date>2014-06-04T15:51:33.000</date>
+				<date>2014-06-04T17:02:08.000</date>
 				<Type2PosVel>
 					<frame>CELESTIAL_MEAN_OF_DATE</frame>
 					<nature>MEAN</nature>
@@ -28,16 +28,16 @@
 		</initState>
 		<finalState>
 			<bulletin version="2.5.0">
-				<date>2014-09-09T02:37:55.231</date>
+				<date>2014-09-09T10:10:29.790</date>
 				<Type2PosVel>
 					<frame>CELESTIAL_MEAN_OF_DATE</frame>
 					<nature>MEAN</nature>
-					<semiMajorAxis unit="m">6496996.157503347</semiMajorAxis>
-					<eccentricity>7.821181594051734E-4</eccentricity>
-					<inclination unit="rad">1.7174882947095027</inclination>
-					<rAAN unit="rad">0.41580753417137295</rAAN>
-					<argOfPerigee unit="rad">6.047990815307719</argOfPerigee>
-					<meanAnomaly unit="rad">1.134304152648447</meanAnomaly>
+					<semiMajorAxis unit="m">6497439.321125157</semiMajorAxis>
+					<eccentricity>8.598895993728899E-4</eccentricity>
+					<inclination unit="rad">1.717486822142728</inclination>
+					<rAAN unit="rad">0.4154175267335436</rAAN>
+					<argOfPerigee unit="rad">6.0692176520258965</argOfPerigee>
+					<meanAnomaly unit="rad">2.3836033747357064</meanAnomaly>
 				</Type2PosVel>
 			</bulletin>
 		</finalState>
@@ -50,12 +50,12 @@
 	<srpSwitch>true</srpSwitch>
 	<sunSwitch>true</sunSwitch>
 	<moonSwitch>true</moonSwitch>
-	<extrapolationDuration>1036</extrapolationDuration>
+	<extrapolationDuration>1035</extrapolationDuration>
 	<warningFlag>false</warningFlag>
 	<iterativeMode>false</iterativeMode>
 	<GTOIntegrator>
 		<Integrator>
-			<effective_duration unit="years">0.2640626103062306</effective_duration>
+			<effective_duration unit="years">0.2647888873044848</effective_duration>
 			<LOSCriteria1 version="2.5.0">
 				<status_criteria1>1</status_criteria1>
 				<comment_criteria1>Lifetime :0.26 years</comment_criteria1>

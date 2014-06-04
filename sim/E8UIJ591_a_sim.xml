@@ -3,17 +3,17 @@
   <STELAVersion>2.5.1</STELAVersion>
   <SpaceObject>
     <mass unit="kg">1.0</mass>
-    <dragArea>0.54</dragArea>
-    <reflectingArea>2.16</reflectingArea>
+    <dragArea>1.815</dragArea>
+    <reflectingArea>7.26</reflectingArea>
     <reflectivityCoefficient>1.5</reflectivityCoefficient>
     <orbitType>LEO</orbitType>
     <VariableDragCoef/>
-    <name>DAMBNM5N</name>
+    <name>E8UIJ591</name>
   </SpaceObject>
   <EphemerisManager version="2.5.0">
     <initState>
       <bulletin version="2.5.0">
-        <date>2014-06-04T15:51:33.000</date>
+        <date>2014-06-04T17:02:13.000</date>
         <Type2PosVel>
           <frame>CELESTIAL_MEAN_OF_DATE</frame>
           <nature>MEAN</nature>

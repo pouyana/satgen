@@ -3,17 +3,17 @@
   <STELAVersion>2.5.1</STELAVersion>
   <SpaceObject>
     <mass unit="kg">1.0</mass>
-    <dragArea>0.015</dragArea>
-    <reflectingArea>0.06</reflectingArea>
+    <dragArea>0.54</dragArea>
+    <reflectingArea>2.16</reflectingArea>
     <reflectivityCoefficient>1.5</reflectivityCoefficient>
     <orbitType>LEO</orbitType>
     <VariableDragCoef/>
-    <name>T4JDFG04</name>
+    <name>MC3DDH7G</name>
   </SpaceObject>
   <EphemerisManager version="2.5.0">
     <initState>
       <bulletin version="2.5.0">
-        <date>2014-06-04T15:51:28.000</date>
+        <date>2014-06-04T17:02:08.000</date>
         <Type2PosVel>
           <frame>CELESTIAL_MEAN_OF_DATE</frame>
           <nature>MEAN</nature>

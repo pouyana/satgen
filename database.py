@@ -155,6 +155,17 @@ class DB:
         self.create_iteration_data_table()
         self.create_state_tables("initState")
         self.create_state_tables("finalState")
+    
+    def get_sat_id_by_name(self, name):
+        """
+        Search the database with name of the satellite to find
+        the id
+        """
+        conn=self.get_conn()
+        c=self.get_cur()
+        c.execute("SELECT id from spaceObject where name =?", (name,))
+        sat_id = c.fetchone()
+        return sat_id
 
     def insert_space_object(self, name):
         """

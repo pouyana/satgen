@@ -8,12 +8,12 @@
 		<reflectivityCoefficient>1.5</reflectivityCoefficient>
 		<orbitType>LEO</orbitType>
 		<VariableDragCoef/>
-		<name>T4JDFG04</name>
+		<name>2AB66L3J</name>
 	</SpaceObject>
 	<EphemerisManager version="2.5.0">
 		<initState>
 			<bulletin version="2.5.0">
-				<date>2014-06-04T15:51:28.000</date>
+				<date>2014-06-04T17:02:04.000</date>
 				<Type2PosVel>
 					<frame>CELESTIAL_MEAN_OF_DATE</frame>
 					<nature>MEAN</nature>
@@ -28,16 +28,16 @@
 		</initState>
 		<finalState>
 			<bulletin version="2.5.0">
-				<date>2024-03-22T22:31:03.070</date>
+				<date>2024-03-25T05:17:15.277</date>
 				<Type2PosVel>
 					<frame>CELESTIAL_MEAN_OF_DATE</frame>
 					<nature>MEAN</nature>
-					<semiMajorAxis unit="m">6503437.77433006</semiMajorAxis>
-					<eccentricity>2.1236712089603736E-4</eccentricity>
-					<inclination unit="rad">1.7197558002571478</inclination>
-					<rAAN unit="rad">4.4221413480226115</rAAN>
-					<argOfPerigee unit="rad">2.333763201619852</argOfPerigee>
-					<meanAnomaly unit="rad">5.045464154618495</meanAnomaly>
+					<semiMajorAxis unit="m">6508669.539060515</semiMajorAxis>
+					<eccentricity>2.041459444639942E-4</eccentricity>
+					<inclination unit="rad">1.7199125152240475</inclination>
+					<rAAN unit="rad">4.453633604327792</rAAN>
+					<argOfPerigee unit="rad">2.1721158067422834</argOfPerigee>
+					<meanAnomaly unit="rad">3.2252533571571638</meanAnomaly>
 				</Type2PosVel>
 			</bulletin>
 		</finalState>
@@ -50,15 +50,15 @@
 	<srpSwitch>true</srpSwitch>
 	<sunSwitch>true</sunSwitch>
 	<moonSwitch>true</moonSwitch>
-	<extrapolationDuration>7900</extrapolationDuration>
+	<extrapolationDuration>7630</extrapolationDuration>
 	<warningFlag>false</warningFlag>
 	<iterativeMode>false</iterativeMode>
 	<GTOIntegrator>
 		<Integrator>
-			<effective_duration unit="years">9.80089661669456</effective_duration>
+			<effective_duration unit="years">9.807010396132783</effective_duration>
 			<LOSCriteria1 version="2.5.0">
 				<status_criteria1>1</status_criteria1>
-				<comment_criteria1>Lifetime :9.8 years</comment_criteria1>
+				<comment_criteria1>Lifetime :9.81 years</comment_criteria1>
 			</LOSCriteria1>
 			<LOSCriteria2 version="2.5.0">
 				<status_criteria2>3</status_criteria2>

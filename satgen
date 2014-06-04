@@ -15,7 +15,7 @@ from config_converter import Converter
 from config_parser import ConfParser
 from config_step import ConfigStep
 from database import DB
-import envoy
+from extrapolate import Extrapolate
 
 
 def set_verbose_level(level, quiet=False):
@@ -108,6 +108,11 @@ parser.add_argument(
         "--extrapolate",
         action="store_true",
         help="extraploate")
+parser.add_argument(
+        "-r",
+        "--root",
+        nargs=1,
+        help="root sim")
 args = parser.parse_args()
 db=DB("satgen.db")
 verbose = set_verbose_level(args.verbose, args.quiet)
@@ -121,8 +126,6 @@ if(args.config):
     conf_parser = ConfParser(log_level=verbose)
     config_from_file = conf_parser.read_file(args.config)
     config.set_conf(config_from_file)
-    config.set_edge_length(0.1)
-files=[]
 if(args.step and combinations and options):
     for combination in combinations:
         name = set_name(args.name)
@@ -132,6 +135,8 @@ if(args.step and combinations and options):
         fh=open(directory+"/"+config.get_xml_file_name(),"w+")
         fh.write(config.convert_to_xml())
         fh.close
-        files.append(os.path.abspath(fh.name))
-r=envoy.run("./simulator")
-print r
+if(args.extrapolate):
+    ex=Extrapolate()
+    ex.set_root(args.root[0])
+    ex.extrapolate()
+

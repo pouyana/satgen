@@ -26,7 +26,7 @@
  Reflectivity Coefficient : 1.5
  Orbit Type : LEO
  Drag Coefficent Type : VARIABLE
- Name : T4JDFG04
+ Name : 2AB66L3J
  
 [ Atmospheric Model ]
  Atmospheric model : NRLMSISE-00
@@ -35,7 +35,7 @@
  Solar Activity Type : VARIABLE
  
 [ Initial Bulletin ]
- Date : 2014-06-04T15:51:28.000
+ Date : 2014-06-04T17:02:04.000
  Type : Keplerian
  Frame : CELESTIAL_MEAN_OF_DATE
  Nature : MEAN
@@ -47,22 +47,22 @@
  M (Mean anomaly) : 0.0 deg
  
 [ Final Bulletin ]
- Date : 2024-03-22T22:31:03.070
+ Date : 2024-03-25T05:17:15.277
  Type : Keplerian
  Frame : CELESTIAL_MEAN_OF_DATE
  Nature : MEAN
- a (Semi major axis) : 6503.43777433 km
- e (Eccentricity) : 2.1236712E-4
- I (Inclination) : 98.5347491479 deg
- RAAN (Right Ascension of Ascending Node) : 253.370035652 deg
- w (Argument of perigee) : 133.714781836 deg
- M (Mean anomaly) : 289.083801744 deg
+ a (Semi major axis) : 6508.66953906 km
+ e (Eccentricity) : 2.0414594E-4
+ I (Inclination) : 98.5437282541 deg
+ RAAN (Right Ascension of Ascending Node) : 255.174409026 deg
+ w (Argument of perigee) : 124.45306834 deg
+ M (Mean anomaly) : 184.793405226 deg
  
 [ Results ]
 
- Effective simulation duration : 9.8 years
+ Effective simulation duration : 9.81 years
  Criterion 1 : Compliant	(Lifetime under 25 years)
-	Lifetime :9.8 years
+	Lifetime :9.81 years
  Criterion 2 : NotApplicable	(No LEO crossing within 100 years)
  Criterion 3 : NotApplicable	(No GEO crossing between 1 and 100 years)
  Criterion 4 : NotApplicable	(No GEO crossing within 100 years)

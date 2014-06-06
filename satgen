@@ -15,7 +15,7 @@ from config_converter import Converter
 from config_parser import ConfParser
 from config_step import ConfigStep
 from database import DB
-from extrapolate import Extrapolate
+#from extrapolate import Extrapolate
 
 
 def set_verbose_level(level, quiet=False):
@@ -115,6 +115,7 @@ parser.add_argument(
         help="root sim")
 args = parser.parse_args()
 db=DB("satgen.db")
+db.create_all_tables()
 verbose = set_verbose_level(args.verbose, args.quiet)
 config = Config(db,log_level=verbose)
 if(args.step):
@@ -131,12 +132,8 @@ if(args.step and combinations and options):
         name = set_name(args.name)
         config.set_space_object_name(name)
         set_options(config, combination, options)
+        db.update_all(config)
         directory = get_output_dir(args.outputfolder)
         fh=open(directory+"/"+config.get_xml_file_name(),"w+")
         fh.write(config.convert_to_xml())
         fh.close
-if(args.extrapolate):
-    ex=Extrapolate()
-    ex.set_root(args.root[0])
-    ex.extrapolate()
-

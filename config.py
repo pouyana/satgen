@@ -28,7 +28,6 @@ class Config:
         self.conf = {}
         #database
         self.db = db
-        self.db.create_all_tables()
         self.db_id = 0
         #unit library
         self.unit_lib = UnitConverter()
@@ -600,7 +599,6 @@ class Config:
         satgen so the object get inserted to the table.
         """
         self.set_abstract_item("Space Object", "Name", name)
-        self.db_id = self.db.insert_space_object(name)
 
 
     def get_db_id(self):
@@ -1083,7 +1081,6 @@ class Config:
         for sort_item in sorted_list:
             if(sort_item[0] not in exceptions and sort_item[0] != "Drag Coefficent Type"):
                 tmp_el = ET.SubElement(parent, str(trans_dict[sort_item[0]]))
-                self.db.update_value(trans_dict[parent.tag], trans_dict[sort_item[0]], self.get_db_id(), sort_item[1])
                 if sort_item[0] in unit_dict:
                     tmp_el.set('unit', str(unit_dict[sort_item[0]]))
                     #unit conversion
@@ -1100,7 +1097,6 @@ class Config:
             #exception Atmospheric Model
             if(sort_item[0] == "Atmospheric Model"):
                 atmos = ET.SubElement(parent, str(trans_dict["Atmospheric model"]))
-                self.db.update_value(trans_dict[parent.tag], trans_dict[sort_item[0]], self.get_db_id(), sort_item[1])
                 atmos.text = self.get_atmos_model()
 
             #exception Drag Coefficient
@@ -1176,7 +1172,6 @@ class Config:
         leosimulation.set("version", str(self.get_stela_version()))
         stelaversion = ET.SubElement(leosimulation, 'STELAVersion')
         stelaversion.text = "2.5.1"
-        sim_general_id = self.db.insert_sim_general(self.get_db_id())
         spaceobject = ET.SubElement(leosimulation, dictio["Space Object"])
         self.parse_elements(
             spaceobject,
@@ -1196,13 +1191,8 @@ class Config:
         date_element.text = date
         bulletin_type = str(dictio["Type " + self.get_type_of_sim()])
         sim_type_element = ET.SubElement( bulletin, bulletin_type)
-        #set the type of simulation in initialstate db
-        init_id = self.db.insert_init_state(bulletin_type, self.get_db_id())
-        self.db.update_value("spaceObject","initId", self.get_db_id(), init_id)
-        self.db.update_value("initState","date",init_id, self.get_initial_date())
         for param in self.config_dict.get_conf_sim(sim_type_element.tag):
             tmp_el = ET.SubElement(sim_type_element, str(dictio[param]))
-            self.db.update_value("initState", dictio[param], init_id, self.get_abstract_item("Initial Bulletin", param.title()))
             if param in unit_dict:
                 tmp_el.set('unit', str(unit_dict[param]))
                 if(unit_dict[param]=="rad"):
@@ -1237,9 +1227,88 @@ class Config:
             "Earth Tesseral Switch",
             "Iteration Data"])
         result = ""
+        print self.get_conf()
         if(sys.version_info) > (2,7):
             result = prettify(leosimulation)
         else:
             result = ET.tostring(leosimulation)
         return result
+    
+    def convert_space_object_to_tuple(self):
+        """
+        convertes the space object to tuple
+        """
+        key_tuple = tuple()
+        value_tuple = tuple()
+        qu_tuple = tuple()
+        qu = "?,"
+        qu_tuple = "("
+        for k,v in self.get_conf()["Space Object"].items():
+            if(k=="Drag Coefficent Type"):
+                k = k+" "+v
+                v = 1
+            key_tuple = key_tuple+(self.config_dict.get_dict()[k],)
+            value_tuple=value_tuple+(v,)
+            qu_tuple = qu_tuple+qu
+        qu_tuple = qu_tuple[:-1]+")"
+        return {"key":key_tuple, "value":value_tuple, "qu": qu_tuple}
 
+    def convert_init_state_to_tuple(self, space_object_id):
+        """
+        converts the initState to Tuple
+        """
+        unit_dict = self.config_dict.get_unit_dict()
+        key_tuple = tuple()
+        value_tuple = tuple()
+        qu_tuple = tuple()
+        qu = "?,"
+        qu_tuple = "(?,?,?,"
+        bulletin_type = str(self.config_dict.get_dict()["Type " + self.get_type_of_sim()])
+        for param in self.config_dict.get_conf_sim(bulletin_type):
+            key_tuple = key_tuple + (self.config_dict.get_dict()[param],)
+            if param in unit_dict:
+                if(unit_dict[param]=="rad"):
+                    value_tuple = value_tuple + (
+                            self.unit_lib.deg_to_rad(
+                            float(self.get_abstract_item(
+                                "Initial Bulletin", param.title()))), )
+                elif(unit_dict[param]=="m"):
+                    value_tuple = value_tuple + (self.unit_lib.km_to_m(
+                        float(self.get_abstract_item(
+                            "Initial Bulletin", param.title()))),)
+                else:
+                    value_tuple = value_tuple + (self.get_abstract_item(
+                        "Initial Bulletin", param.title()),)
+            else:
+                value_tuple = value_tuple + (
+                        self.get_abstract_item("Initial Bulletin", param.title()),)
+            qu_tuple = qu_tuple+qu
+        key_tuple = key_tuple + ("spaceObjectId", bulletin_type, "date")
+        value_tuple = value_tuple + (space_object_id, 1, self.get_initial_date())
+        qu_tuple = qu_tuple[:-1]+")"
+        return {"key":key_tuple, "value":value_tuple, "qu": qu_tuple}
+
+    def convert_general_sim(self, space_object_id):
+        """
+        convert to General Sim tuple for the database
+        """
+        key_tuple = tuple()
+        value_tuple = tuple()
+        qu_tuple = tuple()
+        qu = "?,"
+        qu_tuple = "(?, "
+        for k,v in self.get_conf()["General"].items():
+            if(k not in ["Stela Version",
+                "Drag Coefficent Type",
+                "Edge Length",
+                "Solar Activity Type",
+                "Atmospheric Model" ,
+                "Earth Tesseral Switch",
+                "Iteration Data"]):
+                key_tuple = key_tuple+(self.config_dict.get_dict()[k],)
+                value_tuple = value_tuple + (v,)
+                qu_tuple = qu_tuple+qu
+        key_tuple = key_tuple + ("spaceObjectId",)
+        value_tuple = value_tuple + (space_object_id,)
+        qu_tuple = qu_tuple[:-1]+")"
+        return {"key":key_tuple, "value":value_tuple, "qu": qu_tuple}

@@ -179,6 +179,7 @@ class ConfigDict:
             "Name" : "name",
             "Initial" : "initState",
             "Bulletin" : "bulletin",
+            "Edge Length" : "EdgeLength",
             "Date" : "date",
             "Type Perigee/Apogee" : "Type0PosVel",
             "Type Cartesian" : "Type1PosVel",

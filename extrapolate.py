@@ -71,21 +71,9 @@ class Extrapolate():
         root = tree.getroot()
         finalstate = root.findall(".//finalState/bulletin")
         self.final_type = list(finalstate[0])[1].tag
+        print list(finalstate[0])[1].tag
         return list(finalstate[0])[1].tag
 
-    def update_final_state(self, final_id, file_name):
-        """
-        Update final state values in database
-        """
-        import xml.etree.ElementTree as ET
-        tree = ET.parse(file_name)
-        root = tree.getroot()
-        finalstate = root.findall(".//finalState/bulletin/"+self.final_type)
-        for fls in finalstate[0].iter():
-            if (fls.tag!=self.final_type):
-                self.get_db().update_value("finalState", fls.tag, final_id, fls.text)
-
-    
     def get_file_list(self):
         """
         returns the files listed in root folder
@@ -96,9 +84,33 @@ class Extrapolate():
         """
         returns the sat name in database from the filename
         """
-        f=file_name.split("_a_sim.xml")[0]
+        f = file_name.split("_a_sim.xml")[0]
         return f
-    
+
+    def convert_to_tuple(self, space_object_id, file_name):
+        """
+        converts the finalState to tuple to be added to the database
+        """
+        import xml.etree.ElementTree as ET
+        tree = ET.parse(file_name)
+        self.final_type = self.getFinalType(os.path.abspath(file_name))
+        root = tree.getroot()
+        finalstate = root.findall(".//finalState/bulletin/"+self.final_type)
+        key_tuple = tuple()
+        value_tuple = tuple()
+        qu_tuple = tuple()
+        qu = "?,"
+        qu_tuple = "(?,?, "
+        for f in finalstate[0].iter():
+            if(f.tag!=self.final_type):
+                key_tuple = key_tuple+(f.tag, )
+                value_tuple = value_tuple + (f.text,)
+                qu_tuple = qu_tuple+qu
+        key_tuple = key_tuple + ("spaceObjectId", "date")
+        value_tuple = value_tuple + (space_object_id[0], self.getFinalDate(os.path.abspath(file_name)))
+        qu_tuple = qu_tuple[:-1]+")"
+        return {"key":key_tuple, "value":value_tuple, "qu": qu_tuple}
+
     def extrapolate(self):
         import subprocess, shlex
         db=DB("satgen.db")
@@ -108,16 +120,15 @@ class Extrapolate():
                 object_id=db.get_sat_id_by_name(self.get_name(f))
                 os.chdir(self.get_root())
                 option=" -i " + os.path.abspath(f) + " -o " + os.path.abspath(f)+"_out"         
-                os.chdir("/home/pouyan/Work/Stela/bin")                    
+                os.chdir("/home/poa32kc/Programs/Stela/bin")                    
                 command_line = "./stela-batch.sh"+option
                 args = shlex.split(command_line)
                 CR = subprocess.call(args)
                 os.chdir(self.get_root())
-                final_type = self.getFinalType(os.path.abspath(f)+"_out_sim.xml")
-                final_id = self.get_db().insert_final_state(final_type,object_id[0])
-                self.update_final_state(final_id,os.path.abspath(f)+"_out_sim.xml")
-                self.db.update_value("finalState", "date", final_id, self.getFinalDate(os.path.abspath(f)+"_out_sim.xml"))
+                config_tuple = self.convert_to_tuple(object_id, os.path.abspath(f)+"_out_sim.xml")
+                print config_tuple
+                self.db.insert_final_state(config_tuple)
 
 ex=Extrapolate()
-ex.set_root("/home/pouyan/Work/Python/satgen/sim/")
+ex.set_root("/home/poa32kc/Programs/Python/satgen/sim/")     
 ex.extrapolate()

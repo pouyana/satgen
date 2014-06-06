@@ -191,19 +191,16 @@ class DB:
         conn.commit()
         return c.lastrowid
 
-    def insert_final_state(self, final_type, space_object_id):
-                """
-                Insert initial points in the table
-                """
-                conn = self.get_conn()
-                c = self.get_cur()
-                c.execute(
-                    '''INSERT INTO finalState({0},
-                    spaceObjectId) values(?, ?)'''.format(final_type),
-                    (1, space_object_id))
-                conn.commit()
-                return c.lastrowid
-    
+    def insert_final_state(self, config_tuple):
+        """
+        Insert finalState to the database after extrapolation
+        """
+        conn = self.get_conn()
+        c = self.get_cur()
+        c.execute(
+            '''INSERT INTO finalState{0} values{1}'''.format(config_tuple["key"], config_tuple["qu"]), config_tuple["value"])
+        conn.commit()
+
     def insert_sim_general(self, space_object_id):
         """
         Insert the Sim general settings in the table
@@ -237,6 +234,27 @@ class DB:
             {1}=? WHERE id=?'''.format(table, column), (value, rowid))
         conn = self.get_conn()
         conn.commit()
+
+    def update_all(self, config):
+        """
+        update all the values at once.
+        """
+        conn = self.get_conn()
+        c = self.get_cur()
+        space_object = config.convert_space_object_to_tuple()
+        c.execute(
+            '''INSERT INTO spaceObject{0} values {1}'''.format(space_object["key"], space_object["qu"]) , space_object["value"])
+        conn.commit()
+        space_object_id = c.lastrowid
+        init_state = config.convert_init_state_to_tuple(space_object_id)
+        c.execute(
+            '''INSERT INTO initState{0} values {1}'''.format(init_state["key"], init_state["qu"]) , init_state["value"])
+        conn.commit()
+        sim_general = config.convert_general_sim(space_object_id)
+        c.execute(
+            '''INSERT INTO simGeneral{0} values{1}'''.format(sim_general["key"], sim_general["qu"]), sim_general["value"])
+        conn.commit
+        return c.lastrowid    
 
 #db = DB("sat.sql")
 #db.create_all_tables()

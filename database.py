@@ -6,6 +6,7 @@ It creates the needed table in sqlite. it also update them when needed.
 """
 
 import sqlite3
+import pint
 
 
 class DB:
@@ -254,10 +255,27 @@ class DB:
         c.execute(
             '''INSERT INTO simGeneral{0} values{1}'''.format(sim_general["key"], sim_general["qu"]), sim_general["value"])
         conn.commit
-        return c.lastrowid    
-
-#db = DB("sat.sql")
-#db.create_all_tables()
-#name = "hello"
-#rowid = db.insert_space_object(name)
-#db.update_value("spaceObject", "name", rowid, "world")
+        return c.lastrowid
+    
+    def get_space_objects_data(self,threads):
+        """
+        Here a list of space objects are create, in respect with the number of 
+        instance of MASTER going to run.
+        """
+        conn = self.get_conn()
+        c = self.get_cur()
+        names_tuple = ("semiMajorAxis","eccentricity","inclination","rAAN","argOfPerigee","meanAnomaly")
+        all_rows = c.execute(
+            '''SELECT semiMajorAxis,
+            eccentricity,
+            inclination,
+            rAAN,
+            argOfPerigee,
+            meanAnomaly
+            FROM initState ORDER BY id''')
+        all_sat_count = len(all_rows.fetchall())
+        #do pOpen with modulo %
+        print number_of_classes
+        
+db=DB("satgen.db")
+db.get_space_objects_data(2)

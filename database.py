@@ -262,20 +262,35 @@ class DB:
         Here a list of space objects are create, in respect with the number of 
         instance of MASTER going to run.
         """
+        result={}
         conn = self.get_conn()
         c = self.get_cur()
         names_tuple = ("semiMajorAxis","eccentricity","inclination","rAAN","argOfPerigee","meanAnomaly")
-        all_rows = c.execute(
-            '''SELECT semiMajorAxis,
+        all_rows_init = c.execute(
+            '''SELECT id,
+            date,
+            semiMajorAxis,
             eccentricity,
             inclination,
             rAAN,
             argOfPerigee,
             meanAnomaly
             FROM initState ORDER BY id''')
-        all_sat_count = len(all_rows.fetchall())
-        #do pOpen with modulo %
-        print number_of_classes
+        all_rows_finish = c.execute(
+                            '''SELECT id,
+                            date,
+                            semiMajorAxis,
+                            eccentricity,
+                            inclination,
+                            rAAN,
+                            argOfPerigee,
+                            meanAnomaly,
+                            spaceObjectId
+                            FROM initState ORDER BY spaceObjectId''')
+        result["initState"]=all_rows_init.fetchall()
+        result["finalState"]=all_rows_finish.fetchall()
+        result["names"]=names_tuple
+        return result
         
 db=DB("satgen.db")
-db.get_space_objects_data(2)
+print db.get_space_objects_data(2)

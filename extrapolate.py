@@ -130,5 +130,5 @@ class Extrapolate():
                 self.db.insert_final_state(config_tuple)
 
 ex=Extrapolate()
-ex.set_root("/home/poa32kc/Programs/Python/satgen/sim/")     
+ex.set_root("/home/poa32kc/Programs/satgen/sim/")     
 ex.extrapolate()

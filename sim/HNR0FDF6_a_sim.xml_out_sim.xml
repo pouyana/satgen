@@ -52,7 +52,7 @@
 	<srpSwitch>true</srpSwitch>
 	<sunSwitch>true</sunSwitch>
 	<moonSwitch>true</moonSwitch>
-	<extrapolationDuration>36557</extrapolationDuration>
+	<extrapolationDuration>38166</extrapolationDuration>
 	<warningFlag>false</warningFlag>
 	<iterativeMode>false</iterativeMode>
 	<GTOIntegrator>

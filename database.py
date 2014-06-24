@@ -276,6 +276,7 @@ class DB:
             argOfPerigee,
             meanAnomaly
             FROM initState ORDER BY id''')
+        result["initState"]=all_rows_init.fetchall()
         all_rows_finish = c.execute(
                             '''SELECT id,
                             date,
@@ -286,8 +287,7 @@ class DB:
                             argOfPerigee,
                             meanAnomaly,
                             spaceObjectId
-                            FROM initState ORDER BY spaceObjectId''')
-        result["initState"]=all_rows_init.fetchall()
+                            FROM finalState ORDER BY spaceObjectId''')
         result["finalState"]=all_rows_finish.fetchall()
         result["names"]=names_tuple
         return result

@@ -265,7 +265,7 @@ class DB:
         result={}
         conn = self.get_conn()
         c = self.get_cur()
-        names_tuple = ("semiMajorAxis","eccentricity","inclination","rAAN","argOfPerigee","meanAnomaly")
+        names_tuple = ("id", "date", "semiMajorAxis","eccentricity","inclination","rAAN","argOfPerigee","meanAnomaly")
         all_rows_init = c.execute(
             '''SELECT id,
             date,

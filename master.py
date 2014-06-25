@@ -8,7 +8,7 @@ To use the code you need MASTER-2009 installed, please Download it
 from: https://sdup.esoc.esa.int
 """
 
-import subproccess
+import subprocess
 import os
 import sys
 from database import DB
@@ -29,7 +29,7 @@ class Master:
         """
         Sets the Master Absolute Path
         """
-        self.master_path= master_path
+        self.master_path = master_path
 
     def get_db(self):
         """
@@ -43,4 +43,16 @@ class Master:
         """
         self.db = db
 
+    def create_env(self):
+        """
+        creates the folders and set the env
+        variable so the master simulation
+        can be run
+        """
+        database data = self.db.get_space_objects_data()
 
+    def run_master(self):
+        """
+        Runs master
+        """
+        subprocess.Popen(self.get_master_path()+

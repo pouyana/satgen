@@ -257,7 +257,7 @@ class DB:
         conn.commit
         return c.lastrowid
     
-    def get_space_objects_data(self,threads):
+    def get_space_objects_data(self):
         """
         Here a list of space objects are create, in respect with the number of 
         instance of MASTER going to run.
@@ -265,32 +265,31 @@ class DB:
         result={}
         conn = self.get_conn()
         c = self.get_cur()
-        names_tuple = ("id", "date", "semiMajorAxis","eccentricity","inclination","rAAN","argOfPerigee","meanAnomaly")
+        names_tuple = ("name", "id",  "init_date", "init_semiMajorAxis","init_eccentricity","init_inclination","init_rAAN","init_argOfPerigee","init_meanAnomaly", "final_id",  "final_date", "final_semiMajorAxis","final_eccentricity", "final_inclination","final_rAAN","final_argOfPerigee","final_meanAnomaly")
         all_rows_init = c.execute(
-            '''SELECT id,
-            date,
-            semiMajorAxis,
-            eccentricity,
-            inclination,
-            rAAN,
-            argOfPerigee,
-            meanAnomaly
-            FROM initState ORDER BY id''')
-        result["initState"]=all_rows_init.fetchall()
-        all_rows_finish = c.execute(
-                            '''SELECT id,
-                            date,
-                            semiMajorAxis,
-                            eccentricity,
-                            inclination,
-                            rAAN,
-                            argOfPerigee,
-                            meanAnomaly,
-                            spaceObjectId
-                            FROM finalState ORDER BY spaceObjectId''')
-        result["finalState"]=all_rows_finish.fetchall()
+            '''SELECT spaceObject.name,
+            spaceObject.id,
+            initState.date,
+            initState.semiMajorAxis,
+            initState.eccentricity,
+            initState.inclination,
+            initState.rAAN,
+            initState.argOfPerigee,
+            initState.meanAnomaly,
+            finalState.id,
+            finalState.date,
+            finalState.semiMajorAxis,
+            finalState.eccentricity,
+            finalState.inclination,
+            finalState.rAAN,
+            finalState.argOfPerigee,
+            finalState.meanAnomaly
+            FROM initState, spaceObject, finalState Where finalState.spaceObjectId=spaceObject.id and initState.id = spaceObject.id''')
+        aq = all_rows_init.fetchall()
+        result["length"] = len(aq)
+        result["data"]=aq
         result["names"]=names_tuple
         return result
         
-db=DB("satgen.db")
-print db.get_space_objects_data(2)
+#db=DB("satgen.db")
+#print db.get_space_objects_data()

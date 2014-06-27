@@ -93,7 +93,6 @@ class Master:
         fh = open(self.get_default_dir()+"/../sample_files/master.inp","r")
         data = fh.read()
         data = data.format(**master_inp_cont)
-        print data
         ff = open(os.getcwd()+"/input/master.inp","w")
         ff.write(data)
         fh.close()
@@ -160,22 +159,60 @@ class Master:
         """
         Runs master
         """
+        from time import sleep
         work_dir = self.get_default_dir()+"/"+db_tuple[self.search_in_tuple(self.get_name_vars(),"name")]
-        os.mkdir(work_dir)
-        os.chdir(work_dir)
-        os.mkdir("output")
-        os.mkdir("input")
-        self.create_files(db_tuple)
-        subprocess.Popen(self.get_master_path()+"/"+"master_linux_64")
-        os.chdir(self.get_default_dir())
+        try:
+            os.mkdir(work_dir)
+            os.chdir(work_dir)
+            os.mkdir("input")
+            os.mkdir("output")
+            self.create_files(db_tuple)
+            subprocess.call(self.get_master_path()+"/"+"master_linux_64")
+        finally:
+            os.chdir(self.get_default_dir())
 
 class MasterThread(threading.Thread):
-    def __init__(self,divider):
+    """
+    Master threads, the only variable is the divider. 
+    for example a 4 divider thread base will have rest values (0,1,2,3).
+    """
+    def __init__(self,divider,db_tuple,master):
+        threading.Thread.__init__(self)
         self.divider = divider
+        self.db_tuple = db_tuple
+        self.master = master
+
+    def run(self):
+        """
+        Thread run, the run_master must be called here
+        """
+        self.master.run_master(self.db_tuple)
 
 db=DB("satgen.db")
 ma=Master("/home/poa32kc/ESA",db,"/home/poa32kc/Programs/satgen/master_sim")
 space_objects = ma.get_space_objects()
-space_tuple_sample = space_objects["data"][1]
 ma.set_name_vars()
-ma.run_master(space_tuple_sample)
+thread_list=[]
+print space_objects["data"]
+for s in space_objects["data"]:
+    while(len(thread_list)>3):
+        while(len(thread_list)!=0):
+            t = thread_list.pop()
+            t.join()
+    print s[ma.get_i("name")]
+    if(s[ma.get_i("id")]%4==0):
+        thread0=MasterThread(0,s,ma)
+        thread_list.append(thread0)
+        thread0.start()
+    if(s[ma.get_i("id")]%4==1):
+        thread1=MasterThread(1,s,ma)
+        thread_list.append(thread1)
+        thread1.start()
+    if(s[ma.get_i("id")]%4==2):
+        thread2=MasterThread(2,s,ma)
+        thread_list.append(thread2)
+        thread2.start()
+    if(s[ma.get_i("id")]%4==3):
+        thread3=MasterThread(3,s,ma)
+        thread_list.append(thread3)
+        thread3.start()

@@ -159,17 +159,8 @@ class Master:
         """
         Runs master
         """
-        from time import sleep
-        work_dir = self.get_default_dir()+"/"+db_tuple[self.search_in_tuple(self.get_name_vars(),"name")]
-        try:
-            os.mkdir(work_dir)
-            os.chdir(work_dir)
-            os.mkdir("input")
-            os.mkdir("output")
-            self.create_files(db_tuple)
-            subprocess.call(self.get_master_path()+"/"+"master_linux_64")
-        finally:
-            os.chdir(self.get_default_dir())
+        self.create_files(db_tuple)
+        subprocess.call(self.get_master_path()+"/"+"master_linux_64")
 
 class MasterThread(threading.Thread):
     """
@@ -181,6 +172,11 @@ class MasterThread(threading.Thread):
         self.divider = divider
         self.db_tuple = db_tuple
         self.master = master
+        self.path = master.get_default_dir()+"/"+db_tuple[master.search_in_tuple(master.get_name_vars(),"name")]
+        os.mkdir(self.path)
+        os.chdir(self.path)
+        os.mkdir("input")
+        os.mkdir("output")
 
     def run(self):
         """
@@ -193,7 +189,6 @@ ma=Master("/home/poa32kc/ESA",db,"/home/poa32kc/Programs/satgen/master_sim")
 space_objects = ma.get_space_objects()
 ma.set_name_vars()
 thread_list=[]
-print space_objects["data"]
 for s in space_objects["data"]:
     while(len(thread_list)>3):
         while(len(thread_list)!=0):

@@ -159,7 +159,6 @@ class Master:
         """
         Runs master
         """
-        self.create_files(db_tuple)
         subprocess.call(self.get_master_path()+"/"+"master_linux_64")
 
 class MasterThread(threading.Thread):
@@ -177,6 +176,7 @@ class MasterThread(threading.Thread):
         os.chdir(self.path)
         os.mkdir("input")
         os.mkdir("output")
+        master.create_files(db_tuple)
 
     def run(self):
         """

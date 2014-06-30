@@ -1,14 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys,os
+import sys
+import os
 import tempfile
 import platform
 import datetime
 import shutil
-from time import sleep
 import re
+import threading
+import subprocess
+import shlex
+from time import sleep
 from config_dict import ConfigDict
 from database import DB
+
 
 class Extrapolate():
     """
@@ -111,24 +116,53 @@ class Extrapolate():
         qu_tuple = qu_tuple[:-1]+")"
         return {"key":key_tuple, "value":value_tuple, "qu": qu_tuple}
 
-    def extrapolate(self):
-        import subprocess, shlex
-        db=DB("satgen.db")
-        self.set_db(db)
-        for f in self.get_file_list():
-            if(os.path.splitext(f)[1]==".xml" and not re.search("out",f)):
-                object_id=db.get_sat_id_by_name(self.get_name(f))
-                os.chdir(self.get_root())
-                option=" -i " + os.path.abspath(f) + " -o " + os.path.abspath(f)+"_out"         
-                os.chdir("/home/poa32kc/Programs/Stela/bin")                    
-                command_line = "./stela-batch.sh"+option
-                args = shlex.split(command_line)
-                CR = subprocess.call(args)
-                os.chdir(self.get_root())
-                config_tuple = self.convert_to_tuple(object_id, os.path.abspath(f)+"_out_sim.xml")
-                print config_tuple
-                self.db.insert_final_state(config_tuple)
+#    def extrapolate(self,f):
+#        if(os.path.splitext(f)[1]==".xml" and not re.search("out",f)):
+#            object_id=db.get_sat_id_by_name(self.get_name(f))
+#            os.chdir(self.get_root())
+#            option=" -i " + os.path.abspath(f) + " -o " + os.path.abspath(f)+"_out"         
+#            os.chdir("/home/poa32kc/Programs/Stela/bin")                    
+#            command_line = "./stela-batch.sh"+option
+#            args = shlex.split(command_line)
+#            CR = subprocess.call(args)
+#            os.chdir(self.get_root())
+#            config_tuple = self.convert_to_tuple(object_id, os.path.abspath(f)+"_out_sim.xml")
+#            self.db.insert_final_state(config_tuple)
+
+
+class ExtrapolateThread(threading.Thread):
+    """
+    The Extrapolate Multithread mechanisem
+    """
+    def __init__(self,f,ex):
+        threading.Thread.__init__(self)
+        self.ex = ex
+        self.f = f
+        option=" -i " + ex.get_root()+f + " -o " + ex.get_root()+f+"_out"
+        self.command_line = "./stela-batch.sh"+option    
+
+    def run(self):
+        if(os.path.splitext(self.f)[1]==".xml" and not re.search("out",self.f)):
+            db=DB("/home/poa32kc/Programs/satgen/satgen.db")
+            object_id=db.get_sat_id_by_name(self.ex.get_name(self.f))
+            args = shlex.split(self.command_line)
+            CR = subprocess.call(args)
+            from time import sleep
+            sleep(1)
+            config_tuple = self.ex.convert_to_tuple(object_id, ex.get_root()+self.f+"_out_sim.xml")    
+            db.insert_final_state(config_tuple)
 
 ex=Extrapolate()
-ex.set_root("/home/poa32kc/Programs/satgen/sim/")     
-ex.extrapolate()
+ex.set_root("/home/poa32kc/Programs/satgen/sim/")
+os.chdir("/home/poa32kc/Programs/Stela/bin")
+thread_list=[]
+for f in ex.get_file_list():
+    #4 multithread
+    while(len(thread_list)>3):
+        while(len(thread_list)!=0):
+            t = thread_list.pop()
+            t.join()
+    thread0=ExtrapolateThread(f,ex)
+    thread0.start()
+    thread_list.append(thread0)
+

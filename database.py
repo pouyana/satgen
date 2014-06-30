@@ -291,5 +291,3 @@ class DB:
         result["names"]=names_tuple
         return result
         
-#db=DB("satgen.db")
-#print db.get_space_objects_data()

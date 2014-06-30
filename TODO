@@ -1,1 +1,0 @@
-./stela-batch.sh -i ../examples/example_LEO_sim.xml -eph_ccsds "test.txt" mean keplerian

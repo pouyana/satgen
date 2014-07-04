@@ -10,6 +10,7 @@ mainly the simulator.
 """
 
 import sys
+import itertools
 from time import gmtime, strftime
 from logger import Logger
 from config_dict import ConfigDict
@@ -524,8 +525,7 @@ class Config:
             self.set_abstract_item(
                 "Space Object",
                 "Reflecting Area",
-                float(
-                    self.get_edge_length() * self.get_edge_length() * number))
+                float(self.calculate_drag_area(self.get_edge_length())
         else:
             self.log.error("A cube had at most 6 Reflectable sides")
 
@@ -613,6 +613,16 @@ class Config:
         """
         self.db_id = db_id
 
+    def calculate_drag_area(self,edge_tuple):
+        """
+        Calculates the drag area with the given tuple
+        """
+        area = 0
+        for i in itertools.combinations(edge_tuple,2):
+            area = ((i[0]*i[1])*2)+area
+
+        return area
+
     def set_drag_area(self, mode="random"):
         """
         Set the Drag area of space object, in m^2
@@ -620,20 +630,19 @@ class Config:
         The default mode is the random, mode
         before that the edge length must be set.
         """
+        area = self.calculate_drag_area(self.get_edge_length)
         try:
             if(self.get_edge_length()):
                 if (mode == "fixed"):
                     self.set_abstract_item(
                         "Space Object",
                         "Drag Area",
-                        float(self.get_edge_length() * self.get_edge_length()))
+                        float(area))
                 elif (mode == "random"):
                     self.set_abstract_item(
                         "Space Object",
                         "Drag Area",
-                        (float(
-                            self.get_edge_length() *
-                            self.get_edge_length()) * 6/4))
+                        (float(area)/4))
         except:
             self.log.error(
                 "The Cube Length is not set"

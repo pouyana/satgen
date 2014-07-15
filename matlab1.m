@@ -42,7 +42,7 @@ curs = fetch(curs);
 close(curs);
 
 %Assign data to output variable
-untitled = curs.Data;
+satdata = curs.Data;
 
 %Close database connection.
 close(conn);

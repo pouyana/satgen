@@ -18,7 +18,7 @@ import xml.etree.ElementTree as ET
 from xml_pretty import prettify
 from unit_converter import UnitConverter
 from database import DB
-
+from config_step import ConfigStep
 
 class Config:
     def __init__(self, db, log_level="ERROR"):
@@ -525,7 +525,7 @@ class Config:
             self.set_abstract_item(
                 "Space Object",
                 "Reflecting Area",
-                float(self.calculate_drag_area(self.get_edge_length())
+                float(self.calculate_drag_area(self.get_edge_length())))
         else:
             self.log.error("A cube had at most 6 Reflectable sides")
 
@@ -617,10 +617,10 @@ class Config:
         """
         Calculates the drag area with the given tuple
         """
+        step_conf = ConfigStep()
         area = 0
-        for i in itertools.combinations(edge_tuple,2):
+        for i in itertools.combinations(step_conf.convert_to_tuple(edge_tuple),2):
             area = ((i[0]*i[1])*2)+area
-
         return area
 
     def set_drag_area(self, mode="random"):
@@ -630,7 +630,7 @@ class Config:
         The default mode is the random, mode
         before that the edge length must be set.
         """
-        area = self.calculate_drag_area(self.get_edge_length)
+        area = self.calculate_drag_area(self.get_edge_length())
         try:
             if(self.get_edge_length()):
                 if (mode == "fixed"):
@@ -1236,7 +1236,6 @@ class Config:
             "Earth Tesseral Switch",
             "Iteration Data"])
         result = ""
-        print self.get_conf()
         if(sys.version_info) > (2,7):
             result = prettify(leosimulation)
         else:

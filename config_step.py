@@ -19,6 +19,8 @@ so diffrenet satellite will be creared.
 from logger import Logger
 import ConfigParser
 import itertools
+import ast
+import re
 
 
 class ConfigStep:
@@ -59,6 +61,19 @@ class ConfigStep:
                 config_value=config.get(section, option, True)
                 self.get_step_conf()[section][option.title()] = config_value
 
+
+    def add_edge_length(self,a,b):
+        """
+        add to same size tuples of edge-length toghether.
+        """
+        return tuple(sum(x) for x in zip(a, b))
+
+    def convert_to_tuple(self,tuple_str):
+        """
+        converts the given tuple string to a tuple python object
+        """
+        return ast.literal_eval(tuple_str)
+
     def do_steps(self):
         """
         Returns all the possible values for different paramters in array
@@ -71,10 +86,20 @@ class ConfigStep:
             all_step_config[k] = tmp_list
             start = v["Start Value"]
             end = v["End Value"]
-            tmp_list.append(float(start))
-            while float(start) < float(end):
-                start = float(start) + float(v["Step"])
-                tmp_list.append(start)
+            #special handling of edge length
+            if(k=="Edge Length"):
+                start=self.convert_to_tuple(start)
+                end=self.convert_to_tuple(end)
+                tmp_list.append(str(start))
+                while(start != end):
+                    start = self.add_edge_length(start,self.convert_to_tuple(v["Step"]))
+                    tmp_list.append(str(start))
+                    print start
+            else:
+                tmp_list.append(float(start))
+                while float(start) < float(end):
+                    start = float(start) + float(v["Step"])
+                    tmp_list.append(start)
         return all_step_config
 
     def get_combinations(self):
@@ -84,7 +109,8 @@ class ConfigStep:
         """
         all_steps = self.do_steps()
         self.option = [k for k,v in all_steps.items()]
-        return itertools.product(*(v for k,v in all_steps.items()))
+        result = itertools.product(*(v for k,v in all_steps.items()))
+        return result
 
     def get_options(self):
         all_steps = self.get_step_conf()

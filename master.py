@@ -190,8 +190,8 @@ space_objects = ma.get_space_objects()
 ma.set_name_vars()
 thread_list=[]
 for s in space_objects["data"]:
-    while(len(thread_list)>3):
-        while(len(thread_list)!=0):
+    while(len(thread_list)>4):
+        while(len(thread_list)<3):
             t = thread_list.pop()
             t.join()
     print s[ma.get_i("name")]

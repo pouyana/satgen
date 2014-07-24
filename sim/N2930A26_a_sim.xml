@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<LEOSimulation version="2.5.0">
+  <STELAVersion>2.5.1</STELAVersion>
+  <SpaceObject>
+    <mass unit="kg">8.0</mass>
+    <dragArea>0.055</dragArea>
+    <reflectingArea>0.22</reflectingArea>
+    <reflectivityCoefficient>1.5</reflectivityCoefficient>
+    <orbitType>LEO</orbitType>
+    <ConstantDragCoef>
+      <cstDragCoef>2.1</cstDragCoef>
+    </ConstantDragCoef>
+    <name>N2930A26</name>
+  </SpaceObject>
+  <EphemerisManager version="2.5.0">
+    <initState>
+      <bulletin version="2.5.0">
+        <date>2014-07-18T16:31:20.000</date>
+        <Type2PosVel>
+          <frame>CELESTIAL_MEAN_OF_DATE</frame>
+          <nature>MEAN</nature>
+          <semiMajorAxis unit="m">7100000.0</semiMajorAxis>
+          <eccentricity>0.001</eccentricity>
+          <inclination unit="rad">1.71914931321</inclination>
+          <rAAN unit="rad">0.0</rAAN>
+          <argOfPerigee unit="rad">0.0</argOfPerigee>
+          <meanAnomaly unit="rad">0.0</meanAnomaly>
+        </Type2PosVel>
+      </bulletin>
+    </initState>
+    <finalState/>
+  </EphemerisManager>
+  <author>CNES</author>
+  <comment>LEO example simulation</comment>
+  <simulationDuration unit="years">100.0</simulationDuration>
+  <ephemerisStep unit="s">86400.0</ephemerisStep>
+  <ttMinusUT1 unit="s">67.184</ttMinusUT1>
+  <srpSwitch>true</srpSwitch>
+  <sunSwitch>true</sunSwitch>
+  <moonSwitch>true</moonSwitch>
+  <warningFlag>false</warningFlag>
+  <iterativeMode>false</iterativeMode>
+  <modelType>GTO</modelType>
+  <atmosModel>NRLMSISE-00</atmosModel>
+  <VariableSolarActivity>
+    <solActType>VARIABLE</solActType>
+  </VariableSolarActivity>
+  <integrationStep unit="s">86400.0</integrationStep>
+  <dragSwitch>true</dragSwitch>
+  <dragQuadPoints>33</dragQuadPoints>
+  <atmosDragRecomputeStep>1</atmosDragRecomputeStep>
+  <srpQuadPoints>11</srpQuadPoints>
+  <reentryAltitude unit="m">120000.0</reentryAltitude>
+  <iterationData>
+    <funcValueAccuracy unit="days">10</funcValueAccuracy>
+    <expDuration unit="years">24.75</expDuration>
+    <simMinusExpDuration unit="years">75.25</simMinusExpDuration>
+    <iterationMethod>FrozenOrbit</iterationMethod>
+  </iterationData>
+  <nbIntegrationStepTesseral>5</nbIntegrationStepTesseral>
+  <zonalOrder>7</zonalOrder>
+</LEOSimulation>

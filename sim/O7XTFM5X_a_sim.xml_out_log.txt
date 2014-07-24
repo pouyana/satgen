@@ -1,0 +1,4 @@
+#CNES - STELA VERSION: 2.5.1
+21/07/2014 20:23:55,763 - INFO  - Initialization of STELA with configuration OpenJDK 64-Bit Server VM 1.7.0_55
+21/07/2014 20:23:56,728 - INFO  - Start extrapolating
+21/07/2014 20:24:15,791 - INFO  - Extrapolation ends after 19 seconds

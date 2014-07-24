@@ -157,8 +157,8 @@ ex.set_root("/home/poa32kc/Programs/satgen/sim/")
 os.chdir("/home/poa32kc/Programs/Stela/bin")
 thread_list=[]
 for f in ex.get_file_list():
-    #4 multithread
-    while(len(thread_list)>3):
+    #6 multithread
+    while(len(thread_list)>6):
         while(len(thread_list)!=0):
             t = thread_list.pop()
             t.join()

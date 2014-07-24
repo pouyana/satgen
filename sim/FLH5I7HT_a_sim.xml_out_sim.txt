@@ -1,0 +1,70 @@
+#CNES - STELA VERSION: 2.5.1
+#LEO Simulation Report 
+[ General ]
+ Model : GTO
+ Author : CNES
+ Comment : LEO example simulation
+ Simulation duration : 100.0 years
+ Ephemeris step : 86400.0 s
+ Difference between terrestrial and universal time : 67.184 s
+ Integration Step : 86400.0 s
+ Atmospheric drag switch : true
+ Drag quadrature Points : 33
+ Atmospheric Drag Recompute step : 1 steps
+ Solar radiation pressure switch : true
+ Solar radiation pressure quadrature Points : 11
+ Sun switch : true
+ Moon switch : true
+ Zonal order : 7
+ Earth Tesseral switch : false
+ Reentry Altitude : 120.0 km
+ 
+[ Space Object ]
+ Mass : 6.0 kg
+ Drag Area : 0.025 m^2
+ Reflecting Area : 0.1 m^2
+ Reflectivity Coefficient : 1.5
+ Orbit Type : LEO
+ Drag Coefficent Type : CONSTANT
+ Constant Drag Coef : 2.1
+ Name : FLH5I7HT
+ 
+[ Atmospheric Model ]
+ Atmospheric model : NRLMSISE-00
+
+[ Solar Activity ]
+ Solar Activity Type : VARIABLE
+ 
+[ Initial Bulletin ]
+ Date : 2014-07-18T14:28:45.000
+ Type : Keplerian
+ Frame : CELESTIAL_MEAN_OF_DATE
+ Nature : MEAN
+ a (Semi major axis) : 6850.0 km
+ e (Eccentricity) : 0.001
+ I (Inclination) : 94.9999999997 deg
+ RAAN (Right Ascension of Ascending Node) : 0.0 deg
+ w (Argument of perigee) : 0.0 deg
+ M (Mean anomaly) : 0.0 deg
+ 
+[ Final Bulletin ]
+ Date : 2022-03-07T03:00:17.174
+ Type : Keplerian
+ Frame : CELESTIAL_MEAN_OF_DATE
+ Nature : MEAN
+ a (Semi major axis) : 6517.85161987 km
+ e (Eccentricity) : 5.4299205E-4
+ I (Inclination) : 94.9519273416 deg
+ RAAN (Right Ascension of Ascending Node) : 121.399384221 deg
+ w (Argument of perigee) : 88.3447481557 deg
+ M (Mean anomaly) : 128.286365929 deg
+ 
+[ Results ]
+
+ Effective simulation duration : 7.63 years
+ Criterion 1 : Compliant	(Lifetime under 25 years)
+	Lifetime :7.63 years
+ Criterion 2 : NotApplicable	(No LEO crossing within 100 years)
+ Criterion 3 : NotApplicable	(No GEO crossing between 1 and 100 years)
+ Criterion 4 : NotApplicable	(No GEO crossing within 100 years)
+ 

@@ -138,8 +138,9 @@ class ExtrapolateThread(threading.Thread):
         threading.Thread.__init__(self)
         self.ex = ex
         self.f = f
-        option=" -i " + ex.get_root()+f + " -o " + ex.get_root()+f+"_out"
-        self.command_line = "./stela-batch.sh"+option    
+        option=" -i " + ex.get_root()+f + " -o " + ex.get_root()+f+"_out"+" -eph_stela "+ ex.get_root()+f+"_out_eph " +"mean "+"keplerian"
+        self.command_line = "./stela-batch.sh"+option
+        print self.command_line
 
     def run(self):
         if(os.path.splitext(self.f)[1]==".xml" and not re.search("out",self.f)):

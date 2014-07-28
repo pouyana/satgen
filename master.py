@@ -191,23 +191,9 @@ ma.set_name_vars()
 thread_list=[]
 for s in space_objects["data"]:
     while(len(thread_list)>4):
-        while(len(thread_list)<3):
+        while(len(thread_list)>0):
             t = thread_list.pop()
             t.join()
-    print s[ma.get_i("name")]
-    if(s[ma.get_i("id")]%4==0):
-        thread0=MasterThread(0,s,ma)
-        thread_list.append(thread0)
-        thread0.start()
-    if(s[ma.get_i("id")]%4==1):
-        thread1=MasterThread(1,s,ma)
-        thread_list.append(thread1)
-        thread1.start()
-    if(s[ma.get_i("id")]%4==2):
-        thread2=MasterThread(2,s,ma)
-        thread_list.append(thread2)
-        thread2.start()
-    if(s[ma.get_i("id")]%4==3):
-        thread3=MasterThread(3,s,ma)
-        thread_list.append(thread3)
-        thread3.start()
+    thread0=MasterThread(1,s,ma)
+    thread0.start()
+    thread_list.append(thread0)

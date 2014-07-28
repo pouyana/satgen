@@ -1,5 +1,5 @@
 #CNES - STELA VERSION: 2.5.1
-21/07/2014 10:33:45,603 - INFO  - Initialization of STELA with configuration OpenJDK 64-Bit Server VM 1.7.0_55
-21/07/2014 10:33:45,793 - WARN  - Warning, parameters are out of advocated bounds [Ratio in reflecting area and object mass should be <= 0.1]
-21/07/2014 10:33:46,968 - INFO  - Start extrapolating
-21/07/2014 10:34:02,242 - INFO  - Extrapolation ends after 15 seconds
+28/07/2014 16:46:44,562 - INFO  - Initialization of STELA with configuration OpenJDK 64-Bit Server VM 1.7.0_55
+28/07/2014 16:46:44,736 - WARN  - Warning, parameters are out of advocated bounds [Ratio in reflecting area and object mass should be <= 0.1]
+28/07/2014 16:46:45,727 - INFO  - Start extrapolating
+28/07/2014 16:46:59,362 - INFO  - Extrapolation ends after 14 seconds

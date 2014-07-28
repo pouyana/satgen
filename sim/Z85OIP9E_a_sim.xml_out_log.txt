@@ -1,5 +1,0 @@
-#CNES - STELA VERSION: 2.5.1
-23/07/2014 17:10:28,043 - INFO  - Initialization of STELA with configuration OpenJDK 64-Bit Server VM 1.7.0_55
-23/07/2014 17:10:28,302 - WARN  - Warning, parameters are out of advocated bounds [Ratio in reflecting area and object mass should be <= 0.1]
-23/07/2014 17:10:29,464 - INFO  - Start extrapolating
-23/07/2014 17:10:47,932 - INFO  - Extrapolation ends after 18 seconds

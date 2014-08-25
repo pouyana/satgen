@@ -7,6 +7,8 @@ It creates the needed table in sqlite. it also update them when needed.
 
 import sqlite3
 import pint
+import ast
+from datetime import datetime
 
 
 class DB:
@@ -168,6 +170,17 @@ class DB:
         sat_id = c.fetchone()
         return sat_id
 
+    def have_finished_id(self,name):
+        """
+        Search the database for the finished simulations see dont reextraplote
+        them again
+        """
+        conn=self.get_conn()
+        c=self.get_cur()
+        c.execute("SELECT finalState.spaceObjectId FROM finalState,spaceObject where spaceObject.name=? and finalState.spaceObjectId = spaceObject.id",(name,))
+        sat_id = c.fetchone()
+        return sat_id
+
     def insert_space_object(self, name):
         """
         Insert the space object in the database.
@@ -265,29 +278,105 @@ class DB:
         result={}
         conn = self.get_conn()
         c = self.get_cur()
-        names_tuple = ("name", "id",  "init_date", "init_semiMajorAxis","init_eccentricity","init_inclination","init_rAAN","init_argOfPerigee","init_meanAnomaly", "final_id",  "final_date", "final_semiMajorAxis","final_eccentricity", "final_inclination","final_rAAN","final_argOfPerigee","final_meanAnomaly")
+        #names_tuple = ("name", "id",  "init_date", "init_semiMajorAxis","init_eccentricity","init_inclination","init_rAAN","init_argOfPerigee","init_meanAnomaly", "final_id",  "final_date", "final_semiMajorAxis","final_eccentricity", "final_inclination","final_rAAN","final_argOfPerigee","final_meanAnomaly")
+#        all_rows_init = c.execute(
+#            '''SELECT spaceObject.name,
+#            spaceObject.id,
+#            initState.date,
+#            initState.semiMajorAxis,
+#            initState.eccentricity,
+#            initState.inclination,
+#            initState.rAAN,
+#            initState.argOfPerigee,
+#            initState.meanAnomaly,
+#            finalState.id,
+#            finalState.date,
+#            finalState.semiMajorAxis,
+#            finalState.eccentricity,
+#            finalState.inclination,
+#            finalState.rAAN,
+#            finalState.argOfPerigee,
+#            finalState.meanAnomaly
+#            FROM initState, spaceObject, finalState Where finalState.spaceObjectId=spaceObject.id and initState.id = spaceObject.id''')
         all_rows_init = c.execute(
-            '''SELECT spaceObject.name,
-            spaceObject.id,
-            initState.date,
-            initState.semiMajorAxis,
-            initState.eccentricity,
-            initState.inclination,
-            initState.rAAN,
-            initState.argOfPerigee,
-            initState.meanAnomaly,
-            finalState.id,
-            finalState.date,
-            finalState.semiMajorAxis,
-            finalState.eccentricity,
-            finalState.inclination,
-            finalState.rAAN,
-            finalState.argOfPerigee,
-            finalState.meanAnomaly
-            FROM initState, spaceObject, finalState Where finalState.spaceObjectId=spaceObject.id and initState.id = spaceObject.id''')
+            '''SELECT spaceObject.name, finalState.timediff FROM spaceObject,finalState WHERE finalState.timediff < 25.0  and finalState.spaceObjectId=spaceObject.id''')
         aq = all_rows_init.fetchall()
+        print len(aq)
         result["length"] = len(aq)
         result["data"]=aq
-        result["names"]=names_tuple
         return result
-        
+
+    def time_convert(self):
+        """
+        Get the finishtime and start time and then minus from each other,
+        then put it in time difference column
+        """
+        conn = self.get_conn()
+        c = self.get_cur()
+        days_in_year = 365.2425
+        #add the new column
+        try:
+            c.execute('''ALTER TABLE finalState add timediff real''')
+        except sqlite3.OperationalError as e:
+            print "column already exists already exists "+str(e)
+        all_start_finish = c.execute('''SELECT finalState.id, 
+            initState.date,
+            finalState.date from initState,finalState WHERE 
+            finalState.spaceObjectId = initState.id''')
+        aq = all_start_finish.fetchall()
+        for a in aq:
+            start_date = datetime.strptime(a[1],"%Y-%m-%dT%H:%M:%S.%f")
+            end_date = datetime.strptime(a[2],"%Y-%m-%dT%H:%M:%S.%f")
+            time_diff = end_date - start_date
+            diff_in_years = time_diff.days/days_in_year
+            self.update_value("finalState", "timediff",a[0],diff_in_years)
+            print "insrted finalId "+str(a[0])
+    def set_u(self):
+        """
+        Set the U from how big the satellite is
+        """
+        conn = self.get_conn()
+        c = self.get_cur()
+        #alter the table to add u
+        try:
+            c.execute('''ALTER TABLE spaceObject add u real''')
+        except sqlite3.OperationalError as e:
+            print e
+            all_size = c.execute('''SELECT spaceObject.id, spaceObject.edgeLength FROM spaceObject''')
+            aq = all_size.fetchall()
+            for s in aq:
+                tp = ast.literal_eval(s[1])[0] * 10
+                self.update_value("spaceObject","u",s[0],tp)
+                print "inserted u "+str(tp*10)+"in id "+str(s[0])
+
+    def set_collision_prob(self,master_dir):
+        """
+        Use the Master Simulations to set the collisions probabilty
+        """
+        conn = self.get_conn()
+        c = self.get_cur()
+        all_rows_init = c.execute(
+                '''SELECT spaceObject.name, spaceObject.id, spaceObject.dragArea ,finalState.timediff FROM spaceObject,finalState WHERE finalState.timediff < 25.0  and finalState.spaceObjectId=spaceObject.id''')
+        aq = all_rows_init.fetchall()
+        print len(aq)
+        counter =0
+        maximum = 0
+        for res in aq:
+            try:
+                f=open(master_dir+"/"+res[0]+"/output/"+res[0]+"_d.atl")
+                lines=f.readlines()
+                for l in lines:
+                    if l.startswith("#   Global Flux:"):
+                        a=l.split(" ")
+                        global_flux = float(a[len(a)-2])
+                        #if global_flux * res[3] * res[2] > maximum:
+                        maximum = global_flux * res[3] * res[2]
+                        setting = str(global_flux)+","+str(res[2])+","+str(res[3])+","+str(maximum)
+                        print setting
+            except:
+                counter = counter+1
+#        print maximum
+#        print setting
+#conver DB
+db=DB("satgen.db")
+db.set_collision_prob("master_sim")

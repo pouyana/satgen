@@ -17,6 +17,7 @@ import sys
 import shutil
 from database import DB
 from unit_converter import UnitConverter
+from read_eph import Eph
 
 
 class Master:
@@ -89,9 +90,12 @@ class Master:
         fh.close()
         ff.close()
         #master.inp
-        master_inp_cont = self.master_inp_cont_gen(db_tuple)
+        #master_inp_cont = self.master_inp_cont_gen(db_tuple)
+        eph = Eph(db_tuple[0],"/home/poa32kc/Programs/satgen/sim/")
+        master_inp_cont = eph.get_sim_eph()
         fh = open(self.get_default_dir()+"/../sample_files/master.inp","r")
         data = fh.read()
+        print master_inp_cont
         data = data.format(**master_inp_cont)
         ff = open(os.getcwd()+"/input/master.inp","w")
         ff.write(data)
@@ -171,7 +175,8 @@ class MasterThread(threading.Thread):
         self.divider = divider
         self.db_tuple = db_tuple
         self.master = master
-        self.path = master.get_default_dir()+"/"+db_tuple[master.search_in_tuple(master.get_name_vars(),"name")]
+        self.handled = False
+        self.path = master.get_default_dir()+"/"+db_tuple[0]
         os.mkdir(self.path)
         os.chdir(self.path)
         os.mkdir("input")
@@ -184,16 +189,17 @@ class MasterThread(threading.Thread):
         """
         self.master.run_master(self.db_tuple)
 
+
 db=DB("satgen.db")
 ma=Master("/home/poa32kc/ESA",db,"/home/poa32kc/Programs/satgen/master_sim")
 space_objects = ma.get_space_objects()
-ma.set_name_vars()
 thread_list=[]
 for s in space_objects["data"]:
     while(len(thread_list)>4):
-        while(len(thread_list)>0):
-            t = thread_list.pop()
-            t.join()
+        for t in thread_list:
+            if not  t.isAlive():
+                t.handled = True
+        thread_list = [t for t in thread_list if not t.handled]
     thread0=MasterThread(1,s,ma)
     thread0.start()
     thread_list.append(thread0)

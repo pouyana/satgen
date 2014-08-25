@@ -15,7 +15,6 @@ from config_converter import Converter
 from config_parser import ConfParser
 from config_step import ConfigStep
 from database import DB
-#from extrapolate import Extrapolate
 
 
 def set_verbose_level(level, quiet=False):
@@ -113,11 +112,33 @@ parser.add_argument(
         "--root",
         nargs=1,
         help="root sim")
+parser.add_argument(
+        "-d",
+        "--database",
+        nargs=1,
+        help="database_file")
+parser.add_argument(
+        "-u",
+        "--addu",
+        action="store_true",
+        help="if u most be set")
+parser.add_argument(
+        "-t",
+        "--timediff",
+        action="store_true",
+        help="if set, calculates the timediff and put it in the database")
 args = parser.parse_args()
-db=DB("satgen.db")
+db=DB(""+args.database[0]+"")
+print str(args.database)
 db.create_all_tables()
 verbose = set_verbose_level(args.verbose, args.quiet)
 config = Config(db,log_level=verbose)
+
+if(args.database and args.addu):
+    db.set_u()
+
+if(args.database and args.timediff):
+    db.time_convert()
 if(args.step):
     steps = ConfigStep()
     steps.read_conf(args.step)

@@ -31,8 +31,8 @@ ESA MASTER-2009 Model
 # Note: Specify start and end of the analysis epoch.                            
 #-----------------------------------:-----------------------------------------  
 # Begin and end of analysis time interval                                       
-  {init_date}   -(yyyy mm dd hh)- Begin 
-  {final_date}   -(yyyy mm dd hh)- End 
+  {init_date_1}   -(yyyy mm dd hh)- Begin 
+  {final_date_2}   -(yyyy mm dd hh)- End 
 #                                                                               
 #--------------------------< Scenario Settings >------------------------------  
 # Note: Specify scenario for future analysis epochs.                            
@@ -79,8 +79,8 @@ ESA MASTER-2009 Model
   1               -(0,1)-            C population 
 #                                                                               
 # Analysis size/mass thresholds                                                 
-  1.00000e-03 m   -(value (m,kg))-   Lower threshold
-  1.00000e+01 m   -(value (m,kg))-   Upper threshold
+  1.00000e-01 m   -(value (m,kg))-   Lower threshold
+  1.00000e+02 m   -(value (m,kg))-   Upper threshold
 #                                                                               
 #---------------------------< Target Settings >-------------------------------  
 # Note: Specify the type of target to be analyzed.                              
@@ -98,8 +98,8 @@ ESA MASTER-2009 Model
 # Target orbit(s) (considered only in analysis mode 1)                          
 #  start epoch      end epoch    sma        ecc       inc     raan      AoP       
 #_yyyy_mm_dd_hh__yyyy_mm_dd_hh___[km]_______[-]______[deg]____[deg]____[deg]___   
-  {init_date}  {final_date}  {init_semiMajorAxis}   {init_eccentricity}  {init_inclination}  {init_rAAN}  {init_argOfPerigee}
-#  {final_date}  {final_date}  {final_semiMajorAxis}   {final_eccentricity}  {final_inclination}  {final_rAAN}  {final_argOfPerigee}
+  {init_date_1}  {final_date_1}  {init_semiMajorAxis_1}   {init_eccentricity_1}  {init_inclination_1}  {init_rAAN_1}  {init_argOfPerigee_1}
+  {init_date_2}  {final_date_2}  {init_semiMajorAxis_2}   {init_eccentricity_2}  {init_inclination_2}  {init_rAAN_2}  {init_argOfPerigee_2}
 #...                                                                               
 #                                                                               
 # Orbital arc (considered only in analysis mode 1) 
